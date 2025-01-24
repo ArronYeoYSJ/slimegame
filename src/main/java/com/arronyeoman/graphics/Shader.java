@@ -1,0 +1,83 @@
+package com.arronyeoman.graphics;
+
+import com.arronyeoman.ResourceLoader;
+
+import org.lwjgl.opengl.GL20;
+
+public class Shader {
+    
+    private String vertexFile, fragmentFile;
+    public int vertexID, fragmentID, programID;
+
+    public Shader(String vPath, String fPath) {
+        System.out.println("Shader created");
+        vertexFile = ResourceLoader.loadResourceAsString(vPath);
+        fragmentFile = ResourceLoader.loadResourceAsString(fPath);
+    }
+
+    public void create() {
+        System.out.println("creating shader");
+        programID = GL20.glCreateProgram();
+        vertexID = GL20.glCreateShader(GL20.GL_VERTEX_SHADER);
+        
+        GL20.glShaderSource(vertexID, vertexFile);
+        GL20.glCompileShader(vertexID);
+
+        //check whether the vertex shader compiled successfully
+        if (GL20.glGetShaderi(vertexID, GL20.GL_COMPILE_STATUS) == GL20.GL_FALSE) {
+            System.err.println("Vertex shader not compiled");
+            System.err.println(GL20.glGetShaderInfoLog(vertexID));
+            return;
+        }
+
+
+        fragmentID = GL20.glCreateShader(GL20.GL_FRAGMENT_SHADER);
+        GL20.glShaderSource(fragmentID, fragmentFile);
+        GL20.glCompileShader(fragmentID);
+
+        //check whether the fragment shader compiled successfully
+        if (GL20.glGetShaderi(fragmentID, GL20.GL_COMPILE_STATUS) == GL20.GL_FALSE) {
+            System.err.println("Fragment shader not compiled");
+            System.err.println(GL20.glGetShaderInfoLog(fragmentID));
+            return;
+        }
+
+        GL20.glAttachShader(programID, vertexID);
+        GL20.glAttachShader(programID, fragmentID);
+        //link shaders to the program
+        GL20.glLinkProgram(programID);
+        //check whether the program linked successfully, report errors id not
+        if (GL20.glGetProgrami(programID, GL20.GL_LINK_STATUS) == GL20.GL_FALSE) {
+            System.err.println("Program not linked");
+            System.err.println(GL20.glGetProgramInfoLog(programID));
+            return;
+        }
+        // validate the program creation
+        GL20.glValidateProgram(programID);
+        if (GL20.glGetProgrami(programID, GL20.GL_VALIDATE_STATUS) == GL20.GL_FALSE) {
+            System.err.println("SHADER VALIDATION FAILED");
+            System.err.println(GL20.glGetProgramInfoLog(programID));
+            return;
+        }
+        else {
+            System.out.println("Shader program created successfully");
+        }
+    }
+
+    public void bind() {
+        GL20.glUseProgram(programID);
+        //System.out.println("Shader bound at programID: " + programID);
+    }
+
+    public void unbind() {
+        GL20.glUseProgram(0);
+    }
+
+    public void destroy() {
+        GL20.glDetachShader(programID, vertexID);
+        GL20.glDetachShader(programID, fragmentID);
+        GL20.glDeleteShader(vertexID);
+        GL20.glDeleteShader(fragmentID);
+        GL20.glDeleteProgram(programID);
+    }
+}
