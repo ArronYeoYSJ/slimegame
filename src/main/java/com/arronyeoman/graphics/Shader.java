@@ -1,8 +1,13 @@
 package com.arronyeoman.graphics;
 
 import com.arronyeoman.ResourceLoader;
+import com.arronyeoman.maths.*;
 
+import java.nio.FloatBuffer;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.system.MemoryUtil;
+
+
 
 public class Shader {
     
@@ -79,5 +84,31 @@ public class Shader {
         GL20.glDeleteShader(vertexID);
         GL20.glDeleteShader(fragmentID);
         GL20.glDeleteProgram(programID);
+    }
+
+    public int getUniformLocation(String name) {
+        return GL20.glGetUniformLocation(programID, name);
+    }
+
+    public void setUniform(String name, int value) {
+        GL20.glUniform1i(getUniformLocation(name), value);
+    }
+    public void setUniform(String name, float value) {
+        GL20.glUniform1f(getUniformLocation(name), value);
+    }
+    public void setUniform(String name, boolean value) {
+        GL20.glUniform1i(getUniformLocation(name), value  ? 1 :0);
+    }
+   
+    public void setUniform(String name, Vector4 value) {
+        GL20.glUniform4f(getUniformLocation(name), value.getX(), value.getY(), value.getZ(), value.getW());
+    }
+    public void setUniform(String name, Matrix4x4 value) {
+        FloatBuffer matrix = MemoryUtil.memAllocFloat(16);
+        matrix.put(value.swapMajor().getAll()).flip();
+        GL20.glUniformMatrix4fv(getUniformLocation(name), false, matrix);
+        }
+    public int getProgramID() {
+        return programID;
     }
 }
