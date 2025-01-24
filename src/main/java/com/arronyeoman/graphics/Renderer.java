@@ -1,8 +1,5 @@
 package com.arronyeoman.graphics;
 
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
-
-import java.nio.FloatBuffer;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
