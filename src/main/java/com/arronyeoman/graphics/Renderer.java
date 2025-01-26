@@ -5,6 +5,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
+
+import com.arronyeoman.engine.GameObject;
 import com.arronyeoman.graphics.Texture;
 import com.arronyeoman.maths.*;
 
@@ -25,28 +27,27 @@ public class Renderer {
         this.shader = shader;
     }
 
-    public void renderMesh(Mesh mesh, String textureName) {
+    public void renderMesh(GameObject gameObject, String textureName) {
         //System.out.println("Rendering Mesh");
-        temp += 0.02;
-        cycleScale = Math.sin(temp);
-        scaleVector = new Vector4((float)cycleScale, (float)cycleScale, 1.0f, 1.0f);
         //enable vertex array and indices array
         texture = Texture.loadTexture(textureName);
-        GL30.glBindVertexArray(mesh.getVAO());
+        GL30.glBindVertexArray(gameObject.getMesh().getVAO());
         GL30.glEnableVertexAttribArray(0);
         GL30.glEnableVertexAttribArray(1);
         GL30.glEnableVertexAttribArray(2);
+        //@NOTE: use glUniform1i(glGetUniformLocation(program, "textureDataX"), X-1); to assign  specific texture units to uniforms when using multiple textures
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, gameObject.getMesh().getIBO());
         GL15.glActiveTexture(GL15.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
 
-        //@NOTE: use glUniform1i(glGetUniformLocation(program, "textureDataX"), X-1); to assign  specific texture units to uniforms when using multiple textures
-        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.getIBO());
+        
         //GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.getCBO());
 
         shader.bind();
-        shader.setUniform("scale", scaleVector);
+        //Matrix4x4.transform(gameObject.getPosition(), gameObject.getRotation(), gameObject.getScale()).logMatrix();
+        shader.setUniform("transform", Matrix4x4.transform(gameObject.getPosition(), gameObject.getRotation(), gameObject.getScale()));
 
-        GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.getIndices().length, GL11.GL_UNSIGNED_INT, 0);
+        GL11.glDrawElements(GL11.GL_TRIANGLES, gameObject.getMesh().getIndices().length, GL11.GL_UNSIGNED_INT, 0);
         //System.out.println("indices length: " + mesh.getIndices().length);
         //cleanup
 

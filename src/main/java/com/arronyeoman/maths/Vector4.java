@@ -50,6 +50,34 @@ public class Vector4 {
         this.y = y;
     }
 
+    public void add(Vector4 v) {
+        this.x += v.x;
+        this.y += v.y;
+        this.z += v.z;
+        this.w += v.w;
+    }
+    public void add(float x, float y, float z, float w) {
+        this.x += x;
+        this.y += y;
+        this.z += z;
+        this.w += w;
+    }
+
+    public void subtract(Vector4 v) {
+        this.x -= v.x;
+        this.y -= v.y;
+        this.z -= v.z;
+        this.w -= v.w;
+    }
+
+    public void subtract(float x, float y, float z, float w) {
+        this.x -= x;
+        this.y -= y;
+        this.z -= z;
+        this.w -= w;
+    }
+    
+
     public float getX() {
         return x;
     }

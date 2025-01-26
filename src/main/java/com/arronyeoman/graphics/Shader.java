@@ -105,8 +105,8 @@ public class Shader {
     }
     public void setUniform(String name, Matrix4x4 value) {
         FloatBuffer matrix = MemoryUtil.memAllocFloat(16);
-        matrix.put(value.swapMajor().getAll()).flip();
-        GL20.glUniformMatrix4fv(getUniformLocation(name), false, matrix);
+        matrix.put(value.getAll()).flip();
+        GL20.glUniformMatrix4fv(getUniformLocation(name), true, matrix);
         }
     public int getProgramID() {
         return programID;

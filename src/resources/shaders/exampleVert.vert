@@ -6,11 +6,10 @@ layout(location = 2) in vec2 ST;
 out vec4 passColour;
 out vec2 passST;
 
-uniform vec4 offset;
-uniform vec4 scale;
+uniform mat4 transform;
 
 void main() {
-    gl_Position = vec4 (position.x * scale.x, position.y * scale.y, position.z * scale.z, position.w);// + offset;
+    gl_Position = transform * position;
     passColour = colour;
     passST = ST;
 }

@@ -19,17 +19,11 @@ public class Mesh {
     private  int[] indices;
     private float[] UVs;
     private  int  vao, pbo, ibo, cbo, tbo;
-    private Vector4 offsets = new Vector4(0.0f, 0.0f, 0.0f, 0.0f);
-    private boolean loop;
-    private float offsetXFactor, offsetYFactor;
 
-    public Mesh(Vertex[] vertices, int[] indices, float[] UVs, boolean loop, float offsetXFactor, float offsetYFactor) {
+    public Mesh(Vertex[] vertices, int[] indices, float[] UVs) {
         this.vertices = vertices;
         this.indices = indices;
         this.UVs = UVs;
-        this.loop = loop;
-        this.offsetXFactor = offsetXFactor;
-        this.offsetYFactor = offsetYFactor;
     }
 
     public void initMesh() {
@@ -43,20 +37,14 @@ public class Mesh {
         bufferData(vertices, indices, UVs);
     }
 
-    public void updateMesh() {
-        if (loop) {
-            loopOffset(offsetXFactor, offsetYFactor);
-            bufferData(vertices, indices, UVs);
-        }
-    }
 
     public void updatePositions(Vertex[] vertices) {
         FloatBuffer positionBuffer = MemoryUtil.memAllocFloat(vertices.length * 4);
         float [] positionData = new float[vertices.length * 4];
         for (int i = 0; i < vertices.length; i++) {
             Vertex position = vertices[i].getPosition();
-            positionData[i * 4] = position.x + offsets.x;
-            positionData[i * 4 + 1] = position.y + offsets.y;
+            positionData[i * 4] = position.x;
+            positionData[i * 4 + 1] = position.y;
             positionData[i * 4 + 2] = position.z;
             //@TODO review this, manually setting w to 1 here fixes a perspective bug but may break stuff later
             positionData[i * 4 + 3] = position.w;
@@ -121,27 +109,27 @@ public class Mesh {
 
     }
 
-    public void loopOffset(float offsetXFactor, float offsetYFactor) {
-        //loop through the vertices and offset them
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            FloatBuffer offsetX = stack.callocFloat(1);
-            FloatBuffer offsetY = stack.callocFloat(1);
-            offsets = computePositionOffsets(offsetX, offsetY);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    // public void loopOffset(float offsetXFactor, float offsetYFactor) {
+    //     //loop through the vertices and offset them
+    //     try (MemoryStack stack = MemoryStack.stackPush()) {
+    //         FloatBuffer offsetX = stack.callocFloat(1);
+    //         FloatBuffer offsetY = stack.callocFloat(1);
+    //         offsets = computePositionOffsets(offsetX, offsetY);
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
         
-    }
+    // }
 
-    public Vector4 computePositionOffsets(FloatBuffer fXOffset, FloatBuffer fYOffset){
-        float fLoopDuration = 5.0f;
-        float fScale = 3.14159f * 2.0f / fLoopDuration;
-        float fElapsedTime = (float) glfwGetTime();
-        float fCurrTimeThroughLoop = fElapsedTime % fLoopDuration;
-        fXOffset.put(0, (float) Math.cos(fCurrTimeThroughLoop * fScale) * 0.5f);
-        fYOffset.put(0, (float) Math.sin(fCurrTimeThroughLoop * fScale) * 0.5f);
-        return new Vector4(fXOffset.get(0), fYOffset.get(0), 0.0f, 0.0f);
-    }
+    // public Vector4 computePositionOffsets(FloatBuffer fXOffset, FloatBuffer fYOffset){
+    //     float fLoopDuration = 5.0f;
+    //     float fScale = 3.14159f * 2.0f / fLoopDuration;
+    //     float fElapsedTime = (float) glfwGetTime();
+    //     float fCurrTimeThroughLoop = fElapsedTime % fLoopDuration;
+    //     fXOffset.put(0, (float) Math.cos(fCurrTimeThroughLoop * fScale) * 0.5f);
+    //     fYOffset.put(0, (float) Math.sin(fCurrTimeThroughLoop * fScale) * 0.5f);
+    //     return new Vector4(fXOffset.get(0), fYOffset.get(0), 0.0f, 0.0f);
+    // }
 
     public void destroy() {
         GL15.glDeleteBuffers(pbo);

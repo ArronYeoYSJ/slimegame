@@ -7,6 +7,7 @@ import org.lwjgl.glfw.GLFW;
 
 import com.arronyeoman.graphics.Renderer;
 import com.beust.jcommander.Parameter;
+import com.arronyeoman.engine.GameObject;
 import com.arronyeoman.engine.InputHandler;
 import com.arronyeoman.engine.Window;
 import com.arronyeoman.graphics.*;
@@ -35,8 +36,10 @@ public class Main implements Runnable {
         1, 0,
         1, 1,
         0, 1
-    }, true, 0.1f, 0.1f);
+    });
     public Mesh mesh2;
+
+    public GameObject gameObject = new GameObject(mesh, new Vector4(0f,0f ,0f, 0f), new Vector4(1.0f, 1.0f, 1.0f, 1.0f), new Vector4(0f, 0f, 0f, 0f));
 
 // Arguments class
     class Arguments {
@@ -65,20 +68,20 @@ public class Main implements Runnable {
             //create mesh
             mesh.initMesh();
 
-            //create mesh2
-            Triangle triangle = new Triangle(new Vertex(-0.7f, -0.3f), new Vertex(0.7f, -0.3f), new Vertex(0.7f, 0.8f));
-            triangle.setAlpha(0.88f);
-            //System.out.println("tv1 alpha: " + triangle.vertices[0].a);
-            mesh2 = new Mesh (triangle.getVertices(), 
-            new int[] {
-                0, 1, 2,
-            }, new float[] {
-                0, 0,
-                0.8f, 0,
-                0.8f, 0.8f,
-                0, 0
-            }, false, 0.1f, 0.1f);
-            mesh2.initMesh();
+            // //create mesh2
+            // Triangle triangle = new Triangle(new Vertex(-0.7f, -0.3f), new Vertex(0.7f, -0.3f), new Vertex(0.7f, 0.8f));
+            // triangle.setAlpha(0.88f);
+            // //System.out.println("tv1 alpha: " + triangle.vertices[0].a);
+            // mesh2 = new Mesh (triangle.getVertices(), 
+            // new int[] {
+            //     0, 1, 2,
+            // }, new float[] {
+            //     0, 0,
+            //     0.8f, 0,
+            //     0.8f, 0.8f,
+            //     0, 0
+            // }, false, 0.1f, 0.1f);
+            // mesh2.initMesh();
             //create shader
             shader.create();
 
@@ -128,12 +131,14 @@ public class Main implements Runnable {
             }
             switchingScreenMode = false;
         }
+
+        gameObject.update();
     }
     private void render() {
         //System.out.println("Game Rendered");
         //renderer.render();
-        renderer.renderMesh(mesh, "grass.png");
-        renderer.renderMesh(mesh2, "brickTexture.png");
+        renderer.renderMesh(gameObject, "brickTexture.png");
+        //renderer.renderMesh(mesh2, "brickTexture.png");
         window.swapBuffers();
     }
 

@@ -6,6 +6,7 @@ import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
+import com.arronyeoman.maths.Matrix4x4;
 
 public class Window {
     private int width, height;
@@ -18,9 +19,12 @@ public class Window {
     public long time;
     public InputHandler inputHandler;
     private GLFWWindowSizeCallback windowSizeCallback;
+    private Matrix4x4 projectionMatrix;
 
     //create floats for background color
     public float bgRed, bgGreen, bgBlue;
+    //create floats for camera settings
+    private float fov, near, far, aspectRatio;
 
 //constructor for windwo
     public Window(int width, int height, String title) {
@@ -28,6 +32,7 @@ public class Window {
         this.height = height;
         this.title = title;
         time = System.currentTimeMillis();
+        projectionMatrix = Matrix4x4.projection(fov, aspectRatio, near, far);
     }
 
     public void create() {
@@ -186,6 +191,38 @@ public class Window {
 
     public long getTime() {
         return time;
+    }
+
+    public float getFov() {
+        return fov;
+    }
+
+    public void setFov(float fov) {
+        this.fov = fov;
+    }
+
+    public float getNear() {
+        return near;
+    }
+
+    public void setNear(float near) {
+        this.near = near;
+    }
+
+    public float getFar() {
+        return far;
+    }
+
+    public void setFar(float far) {
+        this.far = far;
+    }
+
+    public float getAspectRatio() {
+        return aspectRatio;
+    }
+
+    public void setAspectRatio(float aspectRatio) {
+        this.aspectRatio = aspectRatio;
     }
 
     public void setWidth(int width) {

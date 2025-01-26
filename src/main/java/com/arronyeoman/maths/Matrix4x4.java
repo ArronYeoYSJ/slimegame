@@ -13,11 +13,17 @@ private float[][] matrix;
         }
     }
 
-    public Matrix4x4 identity() {
+    public static Matrix4x4 identity() {
+        Matrix4x4 result = new Matrix4x4();
         for (int i = 0; i < 4; i++) {
-            matrix[i][i] = 1.0f;
+            for (int j = 0; j < 4; j++) {
+                result.matrix[i][j] = 0.0f;
+            }
         }
-        return this;
+        for (int i = 0; i < 4; i++) {
+            result.matrix[i][i] = 1.0f;
+        }
+        return result;
     }
 
     public Matrix4x4(float[] values) {
@@ -49,19 +55,19 @@ private float[][] matrix;
     // @TODO: simplifyn this, we are converting a matrix to float
     // then converting it back to a matrix, to be passed to a function that
     // will convert it back to a float array to be passed to a shader.
-    public Matrix4x4 swapMajor() {
-        float[] array = new float[16];
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                array[i*4 +j] =matrix[j][i];
-            }
-        }
-        Matrix4x4 temp = new Matrix4x4(array);
-        return temp;
-    }
+    // public Matrix4x4 swapMajor() {
+    //     float[] array = new float[16];
+    //     for (int i = 0; i < 4; i++) {
+    //         for (int j = 0; j < 4; j++) {
+    //             array[i*4 +j] =matrix[j][i];
+    //         }
+    //     }
+    //     Matrix4x4 temp = new Matrix4x4(array);
+    //     return temp;
+    // }
 
-    public Matrix4x4 rotate(float angle, Vector4 axis){
-        Matrix4x4 result = new Matrix4x4().identity();
+    public static Matrix4x4 rotate(float angle, Vector4 axis){
+        Matrix4x4 result = Matrix4x4.identity();
         float r = (float) Math.toRadians(angle);
         float cos = (float) Math.cos(r);
         float sin = (float) Math.sin(r);
@@ -84,40 +90,79 @@ private float[][] matrix;
         return result;
     }
 
-    public Matrix4x4 createScalar(Vector4 scale){
-        Matrix4x4 result = new Matrix4x4().identity();
+    public static Matrix4x4 scale(Vector4 scale){
+        Matrix4x4 result = Matrix4x4.identity();
         result.matrix[0][0] = scale.getX();
         result.matrix[1][1] = scale.getY();
         result.matrix[2][2] = scale.getZ();
         return result;
     }
     
-    public Matrix4x4 translate(Vector4 translation){
-        Matrix4x4 result = new Matrix4x4().identity();
-        result.matrix[0][3] = translation.getX() + matrix[0][3];
-        result.matrix[1][3] = translation.getY() + matrix[1][3];
-        result.matrix[2][3] = translation.getZ() + matrix[2][3];
+    public static Matrix4x4 translate(Vector4 translation){
+        Matrix4x4 result = Matrix4x4.identity();
+        result.matrix[0][3] = translation.getX();
+        result.matrix[1][3] = translation.getY();
+        result.matrix[2][3] = translation.getZ();
         return result;
     }
-    public Matrix4x4 multiply(Matrix4x4 other){
-        Matrix4x4 result = new Matrix4x4();
+    public static Matrix4x4 multiply(Matrix4x4 matrix,Matrix4x4 other){
+        Matrix4x4 result = Matrix4x4.identity();
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                result.matrix[i][j] = matrix[i][0] * other.matrix[0][j] +
-                                      matrix[i][1] * other.matrix[1][j] +
-                                      matrix[i][2] * other.matrix[2][j] +
-                                      matrix[i][3] * other.matrix[3][j];
+                result.matrix[i][j] = matrix.matrix[i][0] * other.matrix[0][j] +
+                                      matrix.matrix[i][1] * other.matrix[1][j] +
+                                      matrix.matrix[i][2] * other.matrix[2][j] +
+                                      matrix.matrix[i][3] * other.matrix[3][j];
             }
         }
         return result;
     }
 
+    public static Matrix4x4 transform(Vector4 position, Vector4 rotation, Vector4 scale){
+        Matrix4x4 result = Matrix4x4.identity();
+        Matrix4x4 translation = translate(position);
+        Matrix4x4 rotationMatrix =  Matrix4x4.multiply(rotate(rotation.getX(), new Vector4(1, 0, 0)),
+                                    Matrix4x4.multiply(rotate(rotation.getY(), new Vector4(0, 1, 0)),
+                                    rotate(rotation.getZ(), new Vector4(0, 0, 1))));
+        Matrix4x4 scaleMatrix = Matrix4x4.scale(scale);
+        result = Matrix4x4.multiply(translation, Matrix4x4.multiply(rotationMatrix, scaleMatrix));
+        return result;
+    }
+
+    public static Matrix4x4 projection(float fov, float aspectRatio, float near, float far){
+        Matrix4x4 result = Matrix4x4.identity();
+
+        //terms are based off of this image https://i.sstatic.net/zPcST.png
+        //negative terms have been simplified by negating the denominator
+        float term00 = 1.0f / (aspectRatio * (float) Math.tan(Math.toRadians(fov / 2.0f)));
+        float term11 = 1.0f / ((float) Math.tan(Math.toRadians(fov / 2.0f)));
+        float term22 = (far + near) / (near - far);
+        float term23 = -1.0f;
+        float term32 = (2.0f * far * near) / (near - far);
+        //assign terms to corresponding matrix values
+        result.matrix[0][0] = term00;
+        result.matrix[1][1] = term11;
+        result.matrix[2][2] = term22;
+        result.matrix[2][3] = term23;
+        result.matrix[3][2] = term32;
+                
+        return result;
+    }
+
+        
+
     public Matrix4x4 getMatrix() {
         return this;
     }
 
-    public Matrix4x4 setMatrix(float[][] matrix) {
-        this.matrix = matrix;
-        return this;
+    public void logMatrix() {
+        System.out.println("Matrix4x4");
+        for (float[] row : this.matrix) {
+            for (float value : row) {
+                System.out.print(value + " ");
+            }
+            System.out.println();
+        }
     }
+
 }
