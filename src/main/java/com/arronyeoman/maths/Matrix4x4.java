@@ -2,10 +2,10 @@ package com.arronyeoman.maths;
 
 public class Matrix4x4 {
 
-float[][] matrix;
+private float[][] matrix;
 
     public Matrix4x4 () {
-        float[][] matrix = new float[4][4];
+        matrix = new float[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 matrix[i][j] = 0.0f;
@@ -13,17 +13,11 @@ float[][] matrix;
         }
     }
 
-    public static Matrix4x4 identity() {
-        float[][] matrix = new float[4][4];
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                matrix[i][j] = 0.0f;
-            }
-        }
+    public Matrix4x4 identity() {
         for (int i = 0; i < 4; i++) {
             matrix[i][i] = 1.0f;
         }
-        return new Matrix4x4().setMatrix(matrix);
+        return this;
     }
 
     public Matrix4x4(float[] values) {
@@ -66,8 +60,8 @@ float[][] matrix;
         return temp;
     }
 
-    public static Matrix4x4 rotate(float angle, Vector4 axis){
-        Matrix4x4 result = Matrix4x4.identity();
+    public Matrix4x4 rotate(float angle, Vector4 axis){
+        Matrix4x4 result = new Matrix4x4().identity();
         float r = (float) Math.toRadians(angle);
         float cos = (float) Math.cos(r);
         float sin = (float) Math.sin(r);
@@ -87,6 +81,34 @@ float[][] matrix;
         result.matrix[2][2] = cos   + axisZ * axisZ      * oneLessCos;
 
 
+        return result;
+    }
+
+    public Matrix4x4 createScalar(Vector4 scale){
+        Matrix4x4 result = new Matrix4x4().identity();
+        result.matrix[0][0] = scale.getX();
+        result.matrix[1][1] = scale.getY();
+        result.matrix[2][2] = scale.getZ();
+        return result;
+    }
+    
+    public Matrix4x4 translate(Vector4 translation){
+        Matrix4x4 result = new Matrix4x4().identity();
+        result.matrix[0][3] = translation.getX() + matrix[0][3];
+        result.matrix[1][3] = translation.getY() + matrix[1][3];
+        result.matrix[2][3] = translation.getZ() + matrix[2][3];
+        return result;
+    }
+    public Matrix4x4 multiply(Matrix4x4 other){
+        Matrix4x4 result = new Matrix4x4();
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                result.matrix[i][j] = matrix[i][0] * other.matrix[0][j] +
+                                      matrix[i][1] * other.matrix[1][j] +
+                                      matrix[i][2] * other.matrix[2][j] +
+                                      matrix[i][3] * other.matrix[3][j];
+            }
+        }
         return result;
     }
 

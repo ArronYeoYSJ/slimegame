@@ -1,4 +1,4 @@
-package com.arronyeoman;
+package com.arronyeoman.engine;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;

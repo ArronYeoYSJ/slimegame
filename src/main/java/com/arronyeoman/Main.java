@@ -7,6 +7,8 @@ import org.lwjgl.glfw.GLFW;
 
 import com.arronyeoman.graphics.Renderer;
 import com.beust.jcommander.Parameter;
+import com.arronyeoman.engine.InputHandler;
+import com.arronyeoman.engine.Window;
 import com.arronyeoman.graphics.*;
 import com.arronyeoman.graphics.shapes.*;
 import com.arronyeoman.maths.*;
