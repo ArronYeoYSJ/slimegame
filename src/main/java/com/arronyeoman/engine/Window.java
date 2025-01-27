@@ -57,7 +57,7 @@ public class Window {
         }
         GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
         GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
-        GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
+        //GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
 
         window = GLFW.glfwCreateWindow(width, height, title, 0, 0);
         inputHandler = new InputHandler();
@@ -145,7 +145,7 @@ public class Window {
             GLFW.glfwSetWindowSize(window, (int) Math.floor(height * aspectRatio), height);
         }
         GLFW.glfwGetWindowSize(window, currentWidth, currentHeight);
-        GL11.glViewport(0, 0, currentWidth.get(0), currentHeight.get(0)); 
+        //GL11.glViewport(0, 0, currentWidth.get(0), currentHeight.get(0)); 
         prevHeight = currentHeight.get(0);
         prevWidth = currentWidth.get(0);
         resized = false;

@@ -7,11 +7,11 @@ import org.lwjgl.glfw.GLFW;
 
 import com.arronyeoman.graphics.Renderer;
 import com.beust.jcommander.Parameter;
+import com.arronyeoman.engine.Camera;
 import com.arronyeoman.engine.GameObject;
 import com.arronyeoman.engine.InputHandler;
 import com.arronyeoman.engine.Window;
 import com.arronyeoman.graphics.*;
-import com.arronyeoman.graphics.shapes.*;
 import com.arronyeoman.maths.*;
 
 
@@ -24,10 +24,10 @@ public class Main implements Runnable {
     public boolean switchingScreenMode = false;
     public Shader shader;
     public Mesh mesh = new Mesh(new Vertex[]{
-        new Vertex(-0.5f, 0.5f, 0.1f, 1.0f),
-        new Vertex(0.5f, 0.5f, 0.1f, 1.0f),
-        new Vertex(0.5f, -0.5f, 0.1f, 1.0f),
-        new Vertex(-0.5f, -0.5f, 0.1f, 1.0f)
+        new Vertex(-0.5f, 0.63f, -0.5f, 1.0f),
+        new Vertex(0.5f, 0.63f, -0.5f, 1.0f),
+        new Vertex(0.5f, -0.63f, -0.5f, 1.0f),
+        new Vertex(-0.5f, -0.63f, -0.5f, 1.0f)
     }, new int[] {
         0, 1, 2,
         0, 3, 2
@@ -39,7 +39,8 @@ public class Main implements Runnable {
     });
     public Mesh mesh2;
 
-    public GameObject gameObject = new GameObject(mesh, new Vector4(0f,0f ,-1f, 1.0f), new Vector4(1.0f, 1.0f, 1.0f, 1.0f), new Vector4(0f, 0f, 0f, 0f));
+    public GameObject gameObject = new GameObject(mesh, new Vector4(0f,0f ,-0.2f, 0.0f), new Vector4(1.0f, 1.0f, 1.0f, 1.0f), new Vector4(0f, 0f, 0f, 0f));
+    public Camera camera = new Camera(new Vector4(0f, 0f, 0f, 0f), new Vector4(0f, 0f, 0f, 0f));
 
 // Arguments class
     class Arguments {
@@ -143,13 +144,16 @@ public class Main implements Runnable {
             }
             switchingScreenMode = false;
         }
+        if (InputHandler.isKeyDown(GLFW.GLFW_KEY_A)){
+            camera.rotate(new Vector4(0.0f, 0.2f, 0.0f, 0f));
+        }
 
         gameObject.update();
     }
     private void render() {
         //System.out.println("Game Rendered");
         //renderer.render();
-        renderer.renderMesh(gameObject, "brickTexture.png");
+        renderer.renderMesh(gameObject, "beautiful.png", camera);
         //renderer.renderMesh(mesh2, "brickTexture.png");
         window.swapBuffers();
     }

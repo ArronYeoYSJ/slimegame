@@ -6,11 +6,12 @@ layout(location = 2) in vec2 ST;
 out vec4 passColour;
 out vec2 passST;
 
-uniform mat4 transform;
+uniform mat4 model;
 uniform mat4 projection;
+uniform mat4 view;
 
 void main() {
-    gl_Position = projection * transform * position;
+    gl_Position = projection * view * model * position;
     passColour = colour;
     passST = ST;
 }

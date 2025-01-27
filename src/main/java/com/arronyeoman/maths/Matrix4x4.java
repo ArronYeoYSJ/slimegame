@@ -149,6 +149,18 @@ private float[][] matrix;
         return result;
     }
 
+    public static Matrix4x4 view(Vector4 position, Vector4 rotation){
+        Matrix4x4 result = Matrix4x4.identity();
+
+        Vector4 negative = new Vector4(-position.getX(), -position.getY(), -position.getZ());
+        Matrix4x4 translation = Matrix4x4.translate(negative);
+        Matrix4x4 rotationMatrix =  Matrix4x4.multiply(rotate(-rotation.getZ(), new Vector4(0, 0, 1)),
+                                    Matrix4x4.multiply(rotate(-rotation.getY(), new Vector4(0, 1, 0)),
+                                    rotate(-rotation.getX(), new Vector4(1, 0, 0))));
+        result = Matrix4x4.multiply(translation, rotationMatrix);
+        return result;
+    }
+
         
 
     public Matrix4x4 getMatrix() {

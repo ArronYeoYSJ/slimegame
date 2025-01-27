@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
+import com.arronyeoman.engine.Camera;
 import com.arronyeoman.engine.GameObject;
 import com.arronyeoman.maths.*;
 import com.arronyeoman.engine.Window;
@@ -24,7 +25,7 @@ public class Renderer {
         
     }
 
-    public void renderMesh(GameObject gameObject, String textureName) {
+    public void renderMesh(GameObject gameObject, String textureName, Camera camera) {
         //System.out.println("Rendering Mesh");
         //enable vertex array and indices array
         texture = Texture.loadTexture(textureName);
@@ -35,7 +36,7 @@ public class Renderer {
         //@NOTE: use glUniform1i(glGetUniformLocation(program, "textureDataX"), X-1); to assign  specific texture units to uniforms when using multiple textures
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, gameObject.getMesh().getIBO());
         GL15.glActiveTexture(GL15.GL_TEXTURE0);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
+        GL11.glBindTexture(GL30.GL_TEXTURE_2D, texture);
         //GL11.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_WRAP_S, GL30.GL_CLAMP_TO_EDGE);
         //GL11.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_WRAP_T, GL30.GL_CLAMP_TO_EDGE);
         
@@ -44,8 +45,9 @@ public class Renderer {
 
         shader.bind();
         //Matrix4x4.transform(gameObject.getPosition(), gameObject.getRotation(), gameObject.getScale()).logMatrix();
-        shader.setUniform("transform", Matrix4x4.transform(gameObject.getPosition(), gameObject.getRotation(), gameObject.getScale()));
+        shader.setUniform("model", Matrix4x4.transform(gameObject.getPosition(), gameObject.getRotation(), gameObject.getScale()));
         shader.setUniform("projection", window.getProjectionMatrix());
+        shader.setUniform("view", Matrix4x4.view(camera.getPosition(), camera.getRotation()));
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, gameObject.getMesh().getIndices().length, GL11.GL_UNSIGNED_INT, 0);
         //System.out.println("indices length: " + mesh.getIndices().length);
