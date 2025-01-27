@@ -18,12 +18,12 @@ public class GameObject {
     }
 
     public void update() {
-        frames++;
-        position.setX((float)Math.sin(frames / 60f) * 0.5f);
-        position.setY((float)Math.cos(frames / 60f) * 0.5f);
-        scale.setX((float)Math.sin(frames / 60f));
-        scale.setY((float)Math.sin(frames / 60f));
-        rotation.setZ(frames);
+        //frames++;
+        // position.setX((float)Math.sin(frames / 60f) * 0.5f);
+        // position.setY((float)Math.cos(frames / 60f) * 0.5f);
+        // scale.setX((float)Math.sin(frames / 60f));
+        // scale.setY((float)Math.sin(frames / 60f));
+        // rotation.setZ(frames);
     }
 
     public Mesh getMesh() {

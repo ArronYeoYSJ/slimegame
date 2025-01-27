@@ -39,7 +39,7 @@ public class Main implements Runnable {
     });
     public Mesh mesh2;
 
-    public GameObject gameObject = new GameObject(mesh, new Vector4(0f,0f ,0f, 0f), new Vector4(1.0f, 1.0f, 1.0f, 1.0f), new Vector4(0f, 0f, 0f, 0f));
+    public GameObject gameObject = new GameObject(mesh, new Vector4(0f,0f ,-1f, 1.0f), new Vector4(1.0f, 1.0f, 1.0f, 1.0f), new Vector4(0f, 0f, 0f, 0f));
 
 // Arguments class
     class Arguments {
@@ -49,6 +49,14 @@ public class Main implements Runnable {
     public int width = 1080;
     @Parameter(names = {"--height", "-h"}, description = "Height of the screen")
     public int height = 720;
+    @Parameter(names = {"--fov", "-f"}, description = "Field of view")
+    public float fov = 70.0f;
+    @Parameter(names = {"--near", "-n"}, description = "Near plane")
+    public float near = 0.1f;
+    @Parameter(names = {"--far", "-r"}, description = "Far plane")
+    public float far = 1000.0f;
+    @Parameter(names = {"--aspectRatio", "-a"}, description = "Aspect ratio")
+    public float aspectRatio = 16.0f / 9.0f;
 }
 
     public void start() {
@@ -60,8 +68,12 @@ public class Main implements Runnable {
             System.out.println("Game Initialized");
             //imstamce of window.java class
             window = new Window(arguments.width, arguments.height, "Game");
+            window.setFov(arguments.fov);
+            window.setNear(arguments.near);
+            window.setFar(arguments.far);
+            window.setAspectRatio(arguments.aspectRatio);
             shader = new Shader("src\\resources\\shaders\\exampleVert.vert", "src\\resources\\shaders\\exampleFrag.frag");
-            renderer = new Renderer(shader);
+            renderer = new Renderer(window, shader);
             //create window and display
             window.setBackGroundColor(0.5f, 0.1f, 0.1f);
             window.create();

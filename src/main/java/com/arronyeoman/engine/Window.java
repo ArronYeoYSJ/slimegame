@@ -7,6 +7,11 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import com.arronyeoman.maths.Matrix4x4;
+import org.lwjgl.system.MemoryUtil;
+
+import static org.lwjgl.glfw.GLFW.GLFW_DONT_CARE;
+
+import java.nio.IntBuffer;
 
 public class Window {
     private int width, height;
@@ -20,11 +25,17 @@ public class Window {
     public InputHandler inputHandler;
     private GLFWWindowSizeCallback windowSizeCallback;
     private Matrix4x4 projectionMatrix;
+    private int minHeight = 300;
+    private int minWidth;
 
     //create floats for background color
     public float bgRed, bgGreen, bgBlue;
     //create floats for camera settings
     private float fov, near, far, aspectRatio;
+
+    private IntBuffer currentHeight = MemoryUtil.memAllocInt(1);
+    private IntBuffer currentWidth = MemoryUtil.memAllocInt(1);
+    private float prevHeight, prevWidth;
 
 //constructor for windwo
     public Window(int width, int height, String title) {
@@ -32,17 +43,21 @@ public class Window {
         this.height = height;
         this.title = title;
         time = System.currentTimeMillis();
-        projectionMatrix = Matrix4x4.projection(fov, aspectRatio, near, far);
+        
     }
 
     public void create() {
         System.out.println("creatinf window");
+
+        projectionMatrix = Matrix4x4.projection(fov, aspectRatio, near, far);
+
         if (!GLFW.glfwInit()) {
             System.err.println("Error: GLFW initialization failed.");
             System.exit(1);
         }
         GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
         GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
+        GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
 
         window = GLFW.glfwCreateWindow(width, height, title, 0, 0);
         inputHandler = new InputHandler();
@@ -57,10 +72,12 @@ public class Window {
         GLFW.glfwSetWindowPos(window, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
         GLFW.glfwMakeContextCurrent(window);
         GLFW.glfwShowWindow(window);
+        
         // GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
         // GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
         // GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GLFW.GLFW_TRUE);
         // GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE); 
+        GLFW.glfwSetWindowSizeLimits(window, ((int)Math.floor(minHeight*aspectRatio)), minHeight, GLFW_DONT_CARE, GLFW_DONT_CARE);
 
         //create callbacks
         createCallbacks();
@@ -68,9 +85,14 @@ public class Window {
         GLFW.glfwSwapInterval(1);
         //enable rendering with gl.createCapabilities()
         GL.createCapabilities();
+        
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+        GLFW.glfwGetWindowSize(window, currentWidth, currentHeight);
+        prevHeight = currentHeight.get(0);
+        prevWidth = currentWidth.get(0);
+        
     }
 
     public void update() {
@@ -79,11 +101,6 @@ public class Window {
         //poll for any callbacks
         GLFW.glfwPollEvents();
         countFrames();
-
-        if (resized) {
-            GL11.glViewport(0, 0, width, height);
-            resized = false;
-        }
     }
 
     private void countFrames() {
@@ -103,16 +120,36 @@ public class Window {
                 //  enable mouse button input handling
                 GLFW.glfwSetMouseButtonCallback(window, inputHandler.getMouseButtonCallback());
                 //enable window resize input handling
-                GLFW.glfwSetWindowSizeCallback(window, windowSizeCallback);
                 windowSizeCallback = new GLFWWindowSizeCallback() {
                     @Override
                     public void invoke(long window, int width, int height) {
                         Window.this.width = width;
                         Window.this.height = height;
                         resized = true;
+                        preserveAspectRatio(window, width, height);
                     }
                 };
+                GLFW.glfwSetWindowSizeCallback(window, windowSizeCallback);
         }
+    private void preserveAspectRatio(long window, int width, int height) {
+        //preserve aspect ratio
+        if (width != prevWidth && height != prevHeight) {
+            if (width > (int) Math.floor(height * aspectRatio)) {
+                GLFW.glfwSetWindowSize(window, width, (int) Math.floor(width / aspectRatio));
+            } else {
+                GLFW.glfwSetWindowSize(window, (int) Math.floor(height * aspectRatio), height);
+            }
+        } else if (width != prevWidth && height == prevHeight) {
+            GLFW.glfwSetWindowSize(window, width, (int) Math.floor(width / aspectRatio));
+        } else if (width == prevWidth && height != prevHeight) {
+            GLFW.glfwSetWindowSize(window, (int) Math.floor(height * aspectRatio), height);
+        }
+        GLFW.glfwGetWindowSize(window, currentWidth, currentHeight);
+        GL11.glViewport(0, 0, currentWidth.get(0), currentHeight.get(0)); 
+        prevHeight = currentHeight.get(0);
+        prevWidth = currentWidth.get(0);
+        resized = false;
+    }
 
     public void setBackGroundColor(float red, float green, float blue) {
         bgRed = red;
@@ -247,6 +284,10 @@ public class Window {
 
     public void setBgBlue(float bgBlue) {
         this.bgBlue = bgBlue;
+    }
+
+    public Matrix4x4 getProjectionMatrix() {
+        return projectionMatrix;
     }
     
 }

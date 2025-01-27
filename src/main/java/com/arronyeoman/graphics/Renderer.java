@@ -4,27 +4,24 @@ package com.arronyeoman.graphics;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.system.MemoryStack;
 
 import com.arronyeoman.engine.GameObject;
-import com.arronyeoman.graphics.Texture;
 import com.arronyeoman.maths.*;
+import com.arronyeoman.engine.Window;
 
 
 
 public class Renderer {
 
     private Shader shader;
-
     private int texture;
+    private Window window;
 
-    private double temp;
-    private double cycleScale;
-    private Vector4 scaleVector;
-
-    public Renderer(Shader shader) {
+    public Renderer(Window window, Shader shader) {
         System.out.println("Renderer created");
         this.shader = shader;
+        this.window = window;
+        
     }
 
     public void renderMesh(GameObject gameObject, String textureName) {
@@ -39,13 +36,16 @@ public class Renderer {
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, gameObject.getMesh().getIBO());
         GL15.glActiveTexture(GL15.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
-
+        //GL11.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_WRAP_S, GL30.GL_CLAMP_TO_EDGE);
+        //GL11.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_WRAP_T, GL30.GL_CLAMP_TO_EDGE);
+        
         
         //GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.getCBO());
 
         shader.bind();
         //Matrix4x4.transform(gameObject.getPosition(), gameObject.getRotation(), gameObject.getScale()).logMatrix();
         shader.setUniform("transform", Matrix4x4.transform(gameObject.getPosition(), gameObject.getRotation(), gameObject.getScale()));
+        shader.setUniform("projection", window.getProjectionMatrix());
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, gameObject.getMesh().getIndices().length, GL11.GL_UNSIGNED_INT, 0);
         //System.out.println("indices length: " + mesh.getIndices().length);
