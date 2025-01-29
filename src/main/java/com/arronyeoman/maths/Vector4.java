@@ -23,7 +23,7 @@ public class Vector4 {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.w = 1;
+        this.w = 1f;
     }
     // overload for 2d vector
     //@Override

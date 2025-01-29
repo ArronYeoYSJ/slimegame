@@ -68,13 +68,10 @@ public class Vertex {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.w = 1.0f;
     }
     public void setVertex(float x, float y) {
         this.x = x;
         this.y = y;
-        this.z = 0f;
-        this.w = 1.0f;
     }
 
     public float getX() {

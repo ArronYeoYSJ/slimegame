@@ -61,7 +61,7 @@ public class Mesh {
         float [] colourData = new float[vertices.length * 4];
         for (int i = 0; i < vertices.length; i++) {
             Vertex colour = vertices[i].getcolour();
-            System.out.println("Colour: " + colour.r + " " + colour.g + " " + colour.b + " " + colour.a);
+           // System.out.println("Colour: " + colour.r + " " + colour.g + " " + colour.b + " " + colour.a);
             colourData[i * 4] = colour.x;
             colourData[i * 4 + 1] = colour.y;
             colourData[i * 4 + 2] = colour.z;

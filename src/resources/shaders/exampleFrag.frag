@@ -15,5 +15,5 @@ void main()
     // vec2 vFade = vec2(1,1) - 2*abs(passST - vec2(0.2,0.2));
     // float fade = min(vFade.x, vFade.y);
 
-    outColour = texture(texture1, passST) * passColour /*  * vec4(1,1,1,fade)  */;
+    outColour = texture(texture1, passST);
 }

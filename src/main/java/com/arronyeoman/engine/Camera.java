@@ -6,8 +6,10 @@ import org.lwjgl.glfw.GLFW;
 public class Camera {
     private Vector4 position, rotation;
     private float moveSpeed = 0.5f;
-    private double mouseSensitivity = 1;
+    private double mouseSensitivity = 0.075f;
     private double oldMouseX, oldMouseY, newMouseX, newMouseY = 0;
+
+    public boolean invertY = true;
 
 
     public Camera(Vector4 position, Vector4 rotation) {
@@ -17,7 +19,7 @@ public class Camera {
 
     public void update() {
 
-        rotate(rotation, getMouseInput(mouseSensitivity));
+        rotate(rotation, mouseMoveToLook(getMouseInput(mouseSensitivity), invertY));
 
         if (InputHandler.isKeyDown(GLFW.GLFW_KEY_W)) {
             move(new Vector4(0, 0, moveSpeed));
@@ -37,6 +39,13 @@ public class Camera {
         if (InputHandler.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             move(new Vector4(0, -moveSpeed, 0));
         }
+    }
+    private Vector4 mouseMoveToLook(Vector4 mouseMovement, Boolean invertY){
+        if(invertY){
+            mouseMovement.setY(-mouseMovement.getY());
+        }
+        Vector4 look = new Vector4( mouseMovement.getY(), -mouseMovement.getX());
+        return look;
     }
 
     private Vector4 getMouseInput(double mouseSensitivity) {

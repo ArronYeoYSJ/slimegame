@@ -50,6 +50,14 @@ public class InputHandler {
     public static boolean isKeyDown(int key) {
         return keys[key];
     }
+
+    public static boolean isKeyJustPressed(int key) {
+        if (keys[key]){
+            keys[key] = false;
+            return true;
+        }
+        return false;
+    }
     public static boolean isMouseButtonDown(int button) {
         return mouseButtons[button];
     }

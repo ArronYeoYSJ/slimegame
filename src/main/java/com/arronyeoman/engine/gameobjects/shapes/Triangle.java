@@ -1,4 +1,4 @@
-package com.arronyeoman.graphics.shapes;
+package com.arronyeoman.engine.gameobjects.shapes;
 
 import com.arronyeoman.maths.Vertex;
 

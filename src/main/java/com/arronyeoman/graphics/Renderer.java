@@ -6,9 +6,9 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
 import com.arronyeoman.engine.Camera;
-import com.arronyeoman.engine.GameObject;
 import com.arronyeoman.maths.*;
 import com.arronyeoman.engine.Window;
+import com.arronyeoman.engine.gameobjects.GameObject;
 
 
 

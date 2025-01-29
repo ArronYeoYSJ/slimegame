@@ -133,18 +133,19 @@ private float[][] matrix;
         Matrix4x4 result = Matrix4x4.identity();
 
         //terms are based off of this image https://i.sstatic.net/zPcST.png
-        //negative terms have been simplified by negating the denominator
+        
         float term00 = 1.0f / (aspectRatio * (float) Math.tan(Math.toRadians(fov / 2.0f)));
         float term11 = 1.0f / ((float) Math.tan(Math.toRadians(fov / 2.0f)));
-        float term22 = (far + near) / (near - far);
+        float term22 = -((far + near) / (far -near));
         float term23 = -1.0f;
-        float term32 = (2.0f * far * near) / (near - far);
+        float term32 = -((2.0f * far * near) / (far - near));
         //assign terms to corresponding matrix values
         result.matrix[0][0] = term00;
         result.matrix[1][1] = term11;
         result.matrix[2][2] = term22;
         result.matrix[2][3] = term23;
         result.matrix[3][2] = term32;
+        result.matrix[3][3] = 0.0f;
                 
         return result;
     }

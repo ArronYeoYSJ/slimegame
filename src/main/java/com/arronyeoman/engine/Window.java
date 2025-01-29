@@ -37,6 +37,8 @@ public class Window {
     private IntBuffer currentWidth = MemoryUtil.memAllocInt(1);
     private float prevHeight, prevWidth;
 
+    public boolean isMouseLocked;
+
 //constructor for windwo
     public Window(int width, int height, String title) {
         this.width = width;
@@ -48,7 +50,7 @@ public class Window {
 
     public void create() {
         System.out.println("creatinf window");
-
+        System.out.println("far: " + far);
         projectionMatrix = Matrix4x4.projection(fov, aspectRatio, near, far);
 
         if (!GLFW.glfwInit()) {
@@ -88,6 +90,9 @@ public class Window {
         
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glCullFace(GL11.GL_BACK);
+        GL11.glFrontFace(GL11.GL_CW);
 
         GLFW.glfwGetWindowSize(window, currentWidth, currentHeight);
         prevHeight = currentHeight.get(0);
@@ -175,13 +180,21 @@ public class Window {
         GLFW.glfwDestroyWindow(window);
         GLFW.glfwTerminate();
     }
-
-    public void lockMouse(){
-        GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
+// toggle mouse lock state
+    public void toggleMouseLockState(){
+        if (isMouseLocked) {
+            unlockMouse();
+        } else {
+            lockMouse();
+        }
     }
-
-    public void unlockMouse(){
+    private void lockMouse() {
+        GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
+        isMouseLocked = true;
+    }
+    private void unlockMouse() {
         GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
+        isMouseLocked = false;
     }
 
     public void setFullScreen() {
