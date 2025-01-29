@@ -101,7 +101,7 @@ public class Main implements Runnable {
              //test bezier curve
             // Curves curves = new Curves();
             // curves.test(10);
-
+            
 
         }
 // takes place of main in created threAD
@@ -144,11 +144,10 @@ public class Main implements Runnable {
             }
             switchingScreenMode = false;
         }
-        if (InputHandler.isKeyDown(GLFW.GLFW_KEY_A)){
-            camera.rotate(new Vector4(0.0f, 0.2f, 0.0f, 0f));
-        }
+        
 
         gameObject.update();
+        camera.update();
     }
     private void render() {
         //System.out.println("Game Rendered");

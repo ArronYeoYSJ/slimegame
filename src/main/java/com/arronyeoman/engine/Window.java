@@ -92,6 +92,8 @@ public class Window {
         GLFW.glfwGetWindowSize(window, currentWidth, currentHeight);
         prevHeight = currentHeight.get(0);
         prevWidth = currentWidth.get(0);
+
+        lockMouse();
         
     }
 
@@ -168,9 +170,18 @@ public class Window {
     }
 
     public void destroy() {
+        unlockMouse();
         inputHandler.destroy();
         GLFW.glfwDestroyWindow(window);
         GLFW.glfwTerminate();
+    }
+
+    public void lockMouse(){
+        GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
+    }
+
+    public void unlockMouse(){
+        GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
     }
 
     public void setFullScreen() {
