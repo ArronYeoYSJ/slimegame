@@ -100,9 +100,9 @@ private float[][] matrix;
     
     public static Matrix4x4 translate(Vector4 translation){
         Matrix4x4 result = Matrix4x4.identity();
-        result.matrix[0][3] = translation.getX();
-        result.matrix[1][3] = translation.getY();
-        result.matrix[2][3] = translation.getZ();
+        result.matrix[3][0] = translation.getX();
+        result.matrix[3][1] = translation.getY();
+        result.matrix[3][2] = translation.getZ();
         return result;
     }
     public static Matrix4x4 multiply(Matrix4x4 matrix,Matrix4x4 other){
@@ -121,10 +121,11 @@ private float[][] matrix;
     public static Matrix4x4 transform(Vector4 position, Vector4 rotation, Vector4 scale){
         Matrix4x4 result = Matrix4x4.identity();
         Matrix4x4 translation = translate(position);
-        Matrix4x4 rotationMatrix =  Matrix4x4.multiply(rotate(rotation.getX(), new Vector4(1, 0, 0)),
-                                    Matrix4x4.multiply(rotate(rotation.getY(), new Vector4(0, 1, 0)),
-                                    rotate(rotation.getZ(), new Vector4(0, 0, 1))));
+        Matrix4x4 rotX = rotate(rotation.getX(), new Vector4(1, 0, 0));
+        Matrix4x4 rotY = rotate(rotation.getY(), new Vector4(0, 1, 0));
+        Matrix4x4 rotZ = rotate(rotation.getZ(), new Vector4(0, 0, 1));
         Matrix4x4 scaleMatrix = Matrix4x4.scale(scale);
+        Matrix4x4 rotationMatrix = multiply(rotX, multiply(rotY, rotZ));
         result = Matrix4x4.multiply(translation, Matrix4x4.multiply(rotationMatrix, scaleMatrix));
         return result;
     }
@@ -145,7 +146,7 @@ private float[][] matrix;
         result.matrix[2][2] = term22;
         result.matrix[2][3] = term23;
         result.matrix[3][2] = term32;
-        result.matrix[3][3] = 0.0f;
+        result.matrix[3][3] = 1f;
                 
         return result;
     }
@@ -155,9 +156,10 @@ private float[][] matrix;
 
         Vector4 negative = new Vector4(-position.getX(), -position.getY(), -position.getZ());
         Matrix4x4 translation = Matrix4x4.translate(negative);
-        Matrix4x4 rotationMatrix =  Matrix4x4.multiply(rotate(-rotation.getZ(), new Vector4(0, 0, 1)),
-                                    Matrix4x4.multiply(rotate(-rotation.getY(), new Vector4(0, 1, 0)),
-                                    rotate(-rotation.getX(), new Vector4(1, 0, 0))));
+        Matrix4x4 rotX = Matrix4x4.rotate(rotation.getX(), new Vector4(1, 0, 0));
+        Matrix4x4 rotY = Matrix4x4.rotate(rotation.getY(), new Vector4(0, 1, 0));
+        Matrix4x4 rotZ = Matrix4x4.rotate(rotation.getZ(), new Vector4(0, 0, 1));
+        Matrix4x4 rotationMatrix = Matrix4x4.multiply(rotZ, Matrix4x4.multiply(rotY, rotX));
         result = Matrix4x4.multiply(translation, rotationMatrix);
         return result;
     }

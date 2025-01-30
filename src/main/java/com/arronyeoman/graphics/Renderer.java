@@ -47,6 +47,7 @@ public class Renderer {
         //Matrix4x4.transform(gameObject.getPosition(), gameObject.getRotation(), gameObject.getScale()).logMatrix();
         shader.setUniform("model", Matrix4x4.transform(gameObject.getPosition(), gameObject.getRotation(), gameObject.getScale()));
         shader.setUniform("projection", window.getProjectionMatrix());
+       // System.out.println("pm: " + window.getProjectionMatrix().get(2,2));
         shader.setUniform("view", Matrix4x4.view(camera.getPosition(), camera.getRotation()));
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, gameObject.getMesh().getIndices().length, GL11.GL_UNSIGNED_INT, 0);

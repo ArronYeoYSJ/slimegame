@@ -52,6 +52,7 @@ public class Window {
         System.out.println("creatinf window");
         System.out.println("far: " + far);
         projectionMatrix = Matrix4x4.projection(fov, aspectRatio, near, far);
+        projectionMatrix.logMatrix();
 
         if (!GLFW.glfwInit()) {
             System.err.println("Error: GLFW initialization failed.");

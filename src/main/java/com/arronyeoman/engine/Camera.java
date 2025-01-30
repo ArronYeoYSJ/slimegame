@@ -1,15 +1,17 @@
 package com.arronyeoman.engine;
 
 import com.arronyeoman.maths.Vector4;
+
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 public class Camera {
     private Vector4 position, rotation;
-    private float moveSpeed = 0.5f;
+    private float moveSpeed = 0.1f;
     private double mouseSensitivity = 0.075f;
     private double oldMouseX, oldMouseY, newMouseX, newMouseY = 0;
 
-    public boolean invertY = true;
+    public boolean invertY = false;
 
 
     public Camera(Vector4 position, Vector4 rotation) {
@@ -21,30 +23,21 @@ public class Camera {
 
         rotate(rotation, mouseMoveToLook(getMouseInput(mouseSensitivity), invertY));
 
-        if (InputHandler.isKeyDown(GLFW.GLFW_KEY_W)) {
-            move(new Vector4(0, 0, moveSpeed));
-        }
-        if (InputHandler.isKeyDown(GLFW.GLFW_KEY_S)) {
-            move(new Vector4(0, 0, -moveSpeed));
-        }
-        if (InputHandler.isKeyDown(GLFW.GLFW_KEY_A)) {
-            move(new Vector4(-moveSpeed, 0, 0));
-        }
-        if (InputHandler.isKeyDown(GLFW.GLFW_KEY_D)) {
-            move(new Vector4(moveSpeed, 0, 0));
-        }
-        if (InputHandler.isKeyDown(GLFW.GLFW_KEY_SPACE)) {
-            move(new Vector4(0, moveSpeed, 0));
-        }
-        if (InputHandler.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            move(new Vector4(0, -moveSpeed, 0));
-        }
+        float x = (float) Math.sin(Math.toRadians(rotation.getY())) * moveSpeed;
+		float z = (float) Math.cos(Math.toRadians(rotation.getY())) * moveSpeed;
+		
+		if (InputHandler.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) position = Vector4.add(position, new Vector4(0, -moveSpeed, 0));
+		if (InputHandler.isKeyDown(GLFW.GLFW_KEY_A)) position = Vector4.add(position, new Vector4(-z, 0, x));
+		if (InputHandler.isKeyDown(GLFW.GLFW_KEY_D)) position = Vector4.add(position, new Vector4(z, 0, -x));
+		if (InputHandler.isKeyDown(GLFW.GLFW_KEY_W)) position = Vector4.add(position, new Vector4(-x, 0, -z));
+		if (InputHandler.isKeyDown(GLFW.GLFW_KEY_S)) position = Vector4.add(position, new Vector4(x, 0, z));
+		if (InputHandler.isKeyDown(GLFW.GLFW_KEY_SPACE)) position = Vector4.add(position, new Vector4(0, moveSpeed, 0));
     }
     private Vector4 mouseMoveToLook(Vector4 mouseMovement, Boolean invertY){
         if(invertY){
             mouseMovement.setY(-mouseMovement.getY());
         }
-        Vector4 look = new Vector4( mouseMovement.getY(), -mouseMovement.getX());
+        Vector4 look = new Vector4( mouseMovement.getY(), mouseMovement.getX());
         return look;
     }
 
