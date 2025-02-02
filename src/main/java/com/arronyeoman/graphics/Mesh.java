@@ -21,7 +21,8 @@ public class Mesh {
     private Material material; 
     private  int[] indices;
     private float[] UVs;
-    private  int  vao, pbo, ibo, cbo, tbo;
+    private Vector4[] normals;
+    private  int  vao, pbo, ibo, cbo, tbo, nbo;
     public String textureName;
 
     public Mesh(Vertex[] vertices, int[] indices, float[] UVs) {
@@ -36,10 +37,12 @@ public class Mesh {
         this.material = material;
         float[] uvs = new float[vertices.length * 2];
         Vertex[] verts = new Vertex[vertices.length];
+        normals = new Vector4[vertices.length];
         for (int i = 0; i < vertices.length; i++) {
             uvs[i * 2] = vertices[i].getU();
             uvs[i * 2 + 1] = vertices[i].getV();
             verts[i] = vertices[i].getXYZW();
+            normals[i] = vertices[i].getNormal();
         }
         this.UVs = uvs;
         this.vertices = verts;
@@ -54,7 +57,11 @@ public class Mesh {
         System.out.println("Creating Mesh");
         vao = GL30.glGenVertexArrays();
         GL30.glBindVertexArray(vao);
+
         bufferData(vertices, indices, UVs);
+        if (usesVertPN) {
+            updateNormals(normals);
+        }
     }
 
 
@@ -91,6 +98,20 @@ public class Mesh {
 
         cbo = storeData(colourBuffer, 1, 4);
         System.out.println("CBO: " + cbo);
+    }
+
+    private void updateNormals(Vector4[] verts) {
+        FloatBuffer normalBuffer = MemoryUtil.memAllocFloat(verts.length * 4);
+        float [] normalData = new float[verts.length * 4];
+        for (int i = 0; i < verts.length; i++) {
+            Vector4 normal = verts[i];
+            normalData[i * 4] = normal.getX();
+            normalData[i * 4 + 1] = normal.getY();
+            normalData[i * 4 + 2] = normal.getZ();
+            normalData[i * 4 + 3] = normal.getW();
+        }
+        normalBuffer.put(normalData).flip();
+        nbo = storeData(normalBuffer, 3, 4);
     }
 
     private void bufferData(Vertex[] vertices, int[] indices, float[] UVs){

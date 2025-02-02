@@ -1,6 +1,7 @@
 package com.arronyeoman.graphics;
 
 
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
@@ -23,15 +24,7 @@ public class Renderer {
         System.out.println("Renderer created");
         this.shader = shader;
         this.window = window;
-        float[] testValues = new float[16];
-        testValues = new float[] {
-            1.0f, 0f, 0f, 0f,
-            0f, 1.4f, 0f, 0f,
-            0f, 0f, -1f, -2f,
-            0f, 0f, -1f, 0f
-        };
-        testProjectionMatrix = new Matrix4x4(testValues);
-        
+              
     }
     public void renderMesh(GameObject gameObject, Camera camera) {
         //System.out.println("Rendering Mesh");
@@ -41,6 +34,7 @@ public class Renderer {
         GL30.glEnableVertexAttribArray(0);
         GL30.glEnableVertexAttribArray(1);
         GL30.glEnableVertexAttribArray(2);
+        GL30.glEnableVertexAttribArray(3);
         //@NOTE: use glUniform1i(glGetUniformLocation(program, "textureDataX"), X-1); to assign  specific texture units to uniforms when using multiple textures
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, gameObject.getMesh().getIBO());
         GL15.glActiveTexture(GL15.GL_TEXTURE0);
@@ -70,6 +64,7 @@ public class Renderer {
         GL30.glDisableVertexAttribArray(0);
         GL30.glDisableVertexAttribArray(1);
         GL30.glDisableVertexAttribArray(2);
+        GL30.glDisableVertexAttribArray(3);
         GL30.glBindVertexArray(0);
     }   
 

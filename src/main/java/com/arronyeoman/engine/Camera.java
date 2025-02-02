@@ -8,7 +8,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class Camera {
     private Vector4 position, rotation;
-    private float moveSpeed = 0.1f;
+    private float moveSpeed = 0.21f;
     private float mouseSensitivity = 0.075f;
     private double oldMouseX, oldMouseY, newMouseX, newMouseY = 0;
 
@@ -47,7 +47,7 @@ public class Camera {
 		
 		float dx = (float) (newMouseX - oldMouseX);
 		float dy = (float) (newMouseY - oldMouseY);
-		
+        		
 		rotation = Vector4.add(rotation, new Vector4(-dy * mouseSensitivity, -dx * mouseSensitivity, 0));
 		
 		oldMouseX = newMouseX;
@@ -90,6 +90,9 @@ public class Camera {
         }
         if (InputHandler.isKeyDown(GLFW.GLFW_KEY_H) && distanceFromTarget < 10) {
             distanceFromTarget += 0.1f;
+        }
+        if (InputHandler.isKeyDown(GLFW.GLFW_KEY_PERIOD)) {
+            roll += 10 * mouseSensitivity;
         }
 
 

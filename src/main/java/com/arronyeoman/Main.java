@@ -48,7 +48,7 @@ public class Main implements Runnable {
     @Parameter(names = {"--near", "-n"}, description = "Near plane")
     public float near = 0.1f;
     @Parameter(names = {"--far", "-r"}, description = "Far plane")
-    public float far = 100.0f;
+    public float far = 1000.0f;
     @Parameter(names = {"--aspectRatio", "-a"}, description = "Aspect ratio")
     public float aspectRatio = 16.0f / 9.0f;
 }
@@ -84,7 +84,7 @@ public class Main implements Runnable {
             // cube2 = new Cube(3f, new Vector4(4.0f, 2f, -4f), new Vector4(0f, 45f, 0f, 1f), new Vector4(1f, 1f, 1f, 1f));
             // cube3 = new Cube(2f, new Vector4(-2.0f, 1f, -1f), new Vector4(0f, 45f, 0f, 1f), new Vector4(1f, 1f, 1f, 1f));
             // worldFloor = new WorldFloor(20f, new Vector4(0f, 0f, 0f, 1f),  0f);
-            model = ModelLoader.loadModel("C:\\Users\\arron\\Desktop\\Development\\slimegame\\src\\resources\\models\\dragon.obj", "grass.png");
+            model = ModelLoader.loadModel("C:\\Users\\arron\\Desktop\\Development\\slimegame\\src\\resources\\models\\bunny.stl", "grass.png");
             if (model == null) {
                 System.out.println("Model is null");
             }

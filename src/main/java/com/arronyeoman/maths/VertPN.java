@@ -48,6 +48,9 @@ public class VertPN {
     public Vertex getXYZW(){
         return new Vertex(x, y, z, w);
     }
+    public Vector4 getNormal(){
+        return new Vector4(nx, ny, nz, nw);
+    }
 
     public float getX() {
         return x;
