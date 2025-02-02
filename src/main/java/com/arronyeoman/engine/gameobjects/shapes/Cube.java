@@ -147,6 +147,12 @@ public class Cube implements GameObject{
     public Vector4 getScale() {
         return this.scale;
     }
+    public void setScale (Vector4 scale) {
+        this.scale = scale;
+    }
+    public void setRotation(Vector4 rotation) {
+        this.rotation = rotation;
+    }
 
     public void destroy() {
         mesh.destroy();

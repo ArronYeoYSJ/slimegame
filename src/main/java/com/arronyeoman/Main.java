@@ -89,6 +89,8 @@ public class Main implements Runnable {
                 System.out.println("Model is null");
             }
             dragon = new Cube(model);
+            dragon.setScale(new Vector4(0.2f, 0.2f, 0.2f, 1f));
+            dragon.setRotation(new Vector4(270f, 0f, 270f, 1f));
 
             //System.out.println("creatinf camera");
             //camera = new Camera(new Vector4(0f, 0f, 0f, 1f), new Vector4(0f, 0f, 0f, 1f));
