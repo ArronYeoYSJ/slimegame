@@ -1,6 +1,7 @@
 package com.arronyeoman.engine;
 
 import com.arronyeoman.engine.gameobjects.GameObject;
+import com.arronyeoman.engine.io.InputHandler;
 import com.arronyeoman.maths.Vector4;
 
 import org.lwjgl.glfw.GLFW;

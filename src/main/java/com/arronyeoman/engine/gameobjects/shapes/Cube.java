@@ -4,7 +4,8 @@ import com.arronyeoman.graphics.Mesh;
 import com.arronyeoman.maths.Vector4;
 import com.arronyeoman.maths.Vertex;
 import com.arronyeoman.engine.gameobjects.GameObject;
-import com.arronyeoman.engine.InputHandler;
+import com.arronyeoman.engine.io.InputHandler;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Cube implements GameObject{
@@ -58,6 +59,11 @@ public class Cube implements GameObject{
 
     public Cube() {
         create();
+    }
+
+    public Cube(Mesh mesh) {
+        this.mesh = mesh;
+        mesh.initMesh();
     }
     
     public void update() {

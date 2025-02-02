@@ -1,5 +1,7 @@
 package com.arronyeoman.graphics;
 
+
+import java.io.IOException;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -10,9 +12,9 @@ import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
 public class Texture {
-    private static HashMap<String, Integer> idMap = new HashMap<String, Integer>();
+    private static HashMap<String, float[]> idMap = new HashMap<String, float[]>();
 
-    public static int loadTexture(String textureName){
+    public static float[] loadTexture(String textureName) throws IOException {
         int width;
         int height;
         ByteBuffer buffer;
@@ -30,23 +32,23 @@ public class Texture {
             String filePath = file.getAbsolutePath();
             buffer = STBImage.stbi_load(filePath, w, h, channels, 4);
             if(buffer ==null) {
-                throw new Exception("Can't load file "+textureName+" "+STBImage.stbi_failure_reason());
+                throw new IOException("Can't load file "+textureName+" "+STBImage.stbi_failure_reason());
             }
             width = w.get();
             height = h.get(); 
                 
             int id = GL11.glGenTextures();
-            idMap.put(textureName, id);
+            idMap.put(textureName, new float[]{id, width, height});
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, id);
             GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
                 
             GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
             GL30.glGenerateMipmap(GL30.GL_TEXTURE_2D);
             STBImage.stbi_image_free(buffer);
-            return id;
-        } catch(Exception e) {
+            return new float[]{id, width, height};
+        } catch(IOException e) {
             e.printStackTrace();
         }
-        return 0;
+        return null;
     }
 }

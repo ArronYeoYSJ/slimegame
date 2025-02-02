@@ -136,6 +136,10 @@ public class Vector4 {
     public void setW(float w) {
         this.w = w;
     }
+
+    public Vector4 getVector() {
+        return new Vector4(this.x, this.y, this.z, this.w);
+    }
     
     
 }

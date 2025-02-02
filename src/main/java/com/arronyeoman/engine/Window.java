@@ -6,6 +6,8 @@ import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
+
+import com.arronyeoman.engine.io.InputHandler;
 import com.arronyeoman.maths.Matrix4x4;
 import org.lwjgl.system.MemoryUtil;
 

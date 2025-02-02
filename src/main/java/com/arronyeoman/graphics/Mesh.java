@@ -15,15 +15,35 @@ import org.lwjgl.system.MemoryUtil;
 import com.arronyeoman.maths.*;
 
 public class Mesh {
+    public boolean usesVertPN = false;
     private  Vertex[] vertices;
+    private VertPN[] verticesPN;
+    private Material material; 
     private  int[] indices;
     private float[] UVs;
     private  int  vao, pbo, ibo, cbo, tbo;
+    public String textureName;
 
     public Mesh(Vertex[] vertices, int[] indices, float[] UVs) {
         this.vertices = vertices;
         this.indices = indices;
         this.UVs = UVs;
+    }
+
+    public Mesh(VertPN[] vertices, int[] indices, Material material) {
+        this.verticesPN = vertices;
+        this.indices = indices;
+        this.material = material;
+        float[] uvs = new float[vertices.length * 2];
+        Vertex[] verts = new Vertex[vertices.length];
+        for (int i = 0; i < vertices.length; i++) {
+            uvs[i * 2] = vertices[i].getU();
+            uvs[i * 2 + 1] = vertices[i].getV();
+            verts[i] = vertices[i].getXYZW();
+        }
+        this.UVs = uvs;
+        this.vertices = verts;
+        usesVertPN = true;
     }
 
     public void initMesh() {
@@ -164,6 +184,10 @@ public class Mesh {
 
     public int getTBO() {
         return tbo;
+    }
+
+    public int getTexture() {
+        return material.getTextureID();
     }
     
 }

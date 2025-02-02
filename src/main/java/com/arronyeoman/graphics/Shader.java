@@ -1,6 +1,6 @@
 package com.arronyeoman.graphics;
 
-import com.arronyeoman.engine.ResourceLoader;
+import com.arronyeoman.engine.io.ResourceLoader;
 import com.arronyeoman.maths.*;
 
 import java.nio.FloatBuffer;

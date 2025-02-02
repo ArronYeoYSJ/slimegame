@@ -9,7 +9,7 @@ public interface GameObject {
     //public Vector4 position = null;
 
     void create();
-
+    //int getTextureID();
     Mesh getMesh();
     Vector4 getPosition();
     Vector4 getRotation();

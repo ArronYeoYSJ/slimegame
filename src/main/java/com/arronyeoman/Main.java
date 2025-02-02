@@ -8,10 +8,11 @@ import org.lwjgl.glfw.GLFW;
 import com.arronyeoman.graphics.Renderer;
 import com.beust.jcommander.Parameter;
 import com.arronyeoman.engine.Camera;
-import com.arronyeoman.engine.InputHandler;
 import com.arronyeoman.engine.Window;
 import com.arronyeoman.engine.gameobjects.shapes.*;
 import com.arronyeoman.engine.gameobjects.testobjects.WorldFloor;
+import com.arronyeoman.engine.io.InputHandler;
+import com.arronyeoman.engine.io.ModelLoader;
 import com.arronyeoman.graphics.*;
 import com.arronyeoman.maths.*;
 
@@ -27,7 +28,10 @@ public class Main implements Runnable {
     public Cube cube;
     public Cube cube2;
     public Cube cube3;
+    public Cube dragon;
     public WorldFloor worldFloor;
+
+    public Mesh model;
 
     public Camera camera = new Camera(new Vector4(0f, 0f, 2f, 1f), new Vector4(0f, 0f, 0f, 1f));
 
@@ -72,11 +76,20 @@ public class Main implements Runnable {
             window.create();
             shader.create();
             //System.out.println("Window created");
+
+
+            //@ArronYeoYSJ @TODO: move model creation
             //create cube
-            cube = new Cube(1f, new Vector4(0.0f, 0.5f, -2f), new Vector4(0f, 0f, 0f, 1f), new Vector4(1f, 1f, 1f, 1f));
-            cube2 = new Cube(3f, new Vector4(4.0f, 2f, -4f), new Vector4(0f, 45f, 0f, 1f), new Vector4(1f, 1f, 1f, 1f));
-            cube3 = new Cube(2f, new Vector4(-2.0f, 1f, -1f), new Vector4(0f, 45f, 0f, 1f), new Vector4(1f, 1f, 1f, 1f));
-            worldFloor = new WorldFloor(20f, new Vector4(0f, 0f, 0f, 1f),  0f);
+            // cube = new Cube(1f, new Vector4(0.0f, 0.5f, -2f), new Vector4(0f, 0f, 0f, 1f), new Vector4(1f, 1f, 1f, 1f));
+            // cube2 = new Cube(3f, new Vector4(4.0f, 2f, -4f), new Vector4(0f, 45f, 0f, 1f), new Vector4(1f, 1f, 1f, 1f));
+            // cube3 = new Cube(2f, new Vector4(-2.0f, 1f, -1f), new Vector4(0f, 45f, 0f, 1f), new Vector4(1f, 1f, 1f, 1f));
+            // worldFloor = new WorldFloor(20f, new Vector4(0f, 0f, 0f, 1f),  0f);
+            model = ModelLoader.loadModel("C:\\Users\\arron\\Desktop\\Development\\slimegame\\src\\resources\\models\\dragon.obj", "grass.png");
+            if (model == null) {
+                System.out.println("Model is null");
+            }
+            dragon = new Cube(model);
+
             //System.out.println("creatinf camera");
             //camera = new Camera(new Vector4(0f, 0f, 0f, 1f), new Vector4(0f, 0f, 0f, 1f));
             //System.out.println("Camera position: " + camera.getPosition().toString());
@@ -125,16 +138,22 @@ public class Main implements Runnable {
         }
         
 
-        cube.update();
-        camera.update(cube);
+        //cube.update();
+        camera.update();
     }
     private void render() {
         //System.out.println("Game Rendered");
         //renderer.render();
-        renderer.renderMesh(cube, "brickTexture.png", camera);
-        renderer.renderMesh(worldFloor, "grass.png", camera);
-        renderer.renderMesh(cube2, "brickTexture.png", camera);
-        renderer.renderMesh(cube3, "beautiful.png", camera);
+
+
+        // renderer.renderMesh(cube, "brickTexture.png", camera);
+        // renderer.renderMesh(worldFloor, "grass.png", camera);
+        // renderer.renderMesh(cube2, "brickTexture.png", camera);
+        // renderer.renderMesh(cube3, "beautiful.png", camera);
+        renderer.renderMesh(dragon, camera);
+
+
+
         window.swapBuffers();
     }
 
