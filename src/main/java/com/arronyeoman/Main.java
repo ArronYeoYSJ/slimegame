@@ -10,8 +10,8 @@ import com.beust.jcommander.Parameter;
 import com.arronyeoman.engine.Camera;
 import com.arronyeoman.engine.InputHandler;
 import com.arronyeoman.engine.Window;
-import com.arronyeoman.engine.gameobjects.GameObject;
 import com.arronyeoman.engine.gameobjects.shapes.*;
+import com.arronyeoman.engine.gameobjects.testobjects.WorldFloor;
 import com.arronyeoman.graphics.*;
 import com.arronyeoman.maths.*;
 
@@ -25,9 +25,9 @@ public class Main implements Runnable {
     public boolean switchingScreenMode = false;
     public Shader shader;
     public Cube cube;
+    public WorldFloor worldFloor;
 
-    //public GameObject gameObject = new GameObject(mesh, new Vector4(0f,0f ,-0.2f, 0.0f), new Vector4(1.0f, 1.0f, 1.0f, 1.0f), new Vector4(0f, 0f, 0f, 0f));
-    public Camera camera = new Camera(new Vector4(0f, 0f, 0f, 1f), new Vector4(0f, 0f, 0f, 0f));
+    public Camera camera = new Camera(new Vector4(0f, 0f, 2f, 1f), new Vector4(0f, 0f, 0f, 1f));
 
 // Arguments class
     class Arguments {
@@ -42,7 +42,7 @@ public class Main implements Runnable {
     @Parameter(names = {"--near", "-n"}, description = "Near plane")
     public float near = 0.1f;
     @Parameter(names = {"--far", "-r"}, description = "Far plane")
-    public float far = 1000.0f;
+    public float far = 100.0f;
     @Parameter(names = {"--aspectRatio", "-a"}, description = "Aspect ratio")
     public float aspectRatio = 16.0f / 9.0f;
 }
@@ -59,22 +59,23 @@ public class Main implements Runnable {
             window.setFov(arguments.fov);
             window.setNear(arguments.near);
             window.setFar(arguments.far);
-            
             window.setAspectRatio(arguments.aspectRatio);
-            shader = new Shader("src\\resources\\shaders\\exampleVert.vert", "src\\resources\\shaders\\exampleFrag.frag");
-            renderer = new Renderer(window, shader);
-            //create window and display
-            window.setBackGroundColor(0.5f, 0.1f, 0.1f);
-            window.create();
-            //create mesh
-            //mesh.initMesh();
-
-            //create cube
-            cube = new Cube(0.5f, new Vector4(0f, 0f, 0f, 1.0f));
 
             //create shader
+            shader = new Shader("src\\resources\\shaders\\exampleVert.vert", "src\\resources\\shaders\\exampleFrag.frag");
+            //create renderer
+            renderer = new Renderer(window, shader);
+            System.out.println("Renderer created");
+            window.setBackGroundColor(0.5f, 0.1f, 0.1f);
+            window.create();
             shader.create();
-
+            //System.out.println("Window created");
+            //create cube
+            cube = new Cube(1f, new Vector4(0.0f, 0f, -2f), new Vector4(0f, 0f, 0f, 1f), new Vector4(1f, 1f, 1f, 1f));
+            worldFloor = new WorldFloor(20f);
+            //System.out.println("creatinf camera");
+            //camera = new Camera(new Vector4(0f, 0f, 0f, 1f), new Vector4(0f, 0f, 0f, 1f));
+            //System.out.println("Camera position: " + camera.getPosition().toString());
              //test bezier curve
             // Curves curves = new Curves();
             // curves.test(10);
@@ -120,14 +121,14 @@ public class Main implements Runnable {
         }
         
 
-        //gameObject.update();
+        cube.update();
         camera.update();
     }
     private void render() {
         //System.out.println("Game Rendered");
         //renderer.render();
         renderer.renderMesh(cube, "beautiful.png", camera);
-        //renderer.renderMesh(mesh2, "brickTexture.png");
+        renderer.renderMesh(worldFloor, "grass.png", camera);
         window.swapBuffers();
     }
 
@@ -135,12 +136,5 @@ public class Main implements Runnable {
         System.out.println("Game Closed");
         shader.destroy();
         
-    }
-
-    // private void draw(){
-    //     //System.out.println("Game Drawn");
-        
-    // }
-
-    
+    }   
 }

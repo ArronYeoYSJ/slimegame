@@ -17,11 +17,20 @@ public class Renderer {
     private Shader shader;
     private int texture;
     private Window window;
+    public Matrix4x4 testProjectionMatrix;
 
     public Renderer(Window window, Shader shader) {
         System.out.println("Renderer created");
         this.shader = shader;
         this.window = window;
+        float[] testValues = new float[16];
+        testValues = new float[] {
+            1.0f, 0f, 0f, 0f,
+            0f, 1.4f, 0f, 0f,
+            0f, 0f, -1f, -2f,
+            0f, 0f, -1f, 0f
+        };
+        testProjectionMatrix = new Matrix4x4(testValues);
         
     }
 
@@ -47,7 +56,7 @@ public class Renderer {
         //Matrix4x4.transform(gameObject.getPosition(), gameObject.getRotation(), gameObject.getScale()).logMatrix();
         shader.setUniform("model", Matrix4x4.transform(gameObject.getPosition(), gameObject.getRotation(), gameObject.getScale()));
         shader.setUniform("projection", window.getProjectionMatrix());
-       // System.out.println("pm: " + window.getProjectionMatrix().get(2,2));
+        //window.getProjectionMatrix().logMatrix();
         shader.setUniform("view", Matrix4x4.view(camera.getPosition(), camera.getRotation()));
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, gameObject.getMesh().getIndices().length, GL11.GL_UNSIGNED_INT, 0);

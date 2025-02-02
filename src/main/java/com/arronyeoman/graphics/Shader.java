@@ -21,13 +21,14 @@ public class Shader {
     }
 
     public void create() {
-        System.out.println("creating shader");
+        System.out.println("creating shader11");
         programID = GL20.glCreateProgram();
+        //System.out.println("Shader program created");
         vertexID = GL20.glCreateShader(GL20.GL_VERTEX_SHADER);
-        
+        //System.out.println("Vertex shader created");
         GL20.glShaderSource(vertexID, vertexFile);
         GL20.glCompileShader(vertexID);
-
+        //System.out.println("Vertex shader compiled");
         //check whether the vertex shader compiled successfully
         if (GL20.glGetShaderi(vertexID, GL20.GL_COMPILE_STATUS) == GL20.GL_FALSE) {
             System.err.println("Vertex shader not compiled");
@@ -105,7 +106,9 @@ public class Shader {
     }
     public void setUniform(String name, Matrix4x4 value) {
         FloatBuffer matrix = MemoryUtil.memAllocFloat(16);
-        matrix.put(value.getAll()).flip();
+        // value = value.transpose();
+        matrix.put(value.getAll());
+        matrix.flip();
         GL20.glUniformMatrix4fv(getUniformLocation(name), true, matrix);
         }
     public int getProgramID() {

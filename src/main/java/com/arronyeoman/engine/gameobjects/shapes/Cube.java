@@ -4,6 +4,8 @@ import com.arronyeoman.graphics.Mesh;
 import com.arronyeoman.maths.Vector4;
 import com.arronyeoman.maths.Vertex;
 import com.arronyeoman.engine.gameobjects.GameObject;
+import com.arronyeoman.engine.InputHandler;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class Cube implements GameObject{
 
@@ -13,14 +15,15 @@ public class Cube implements GameObject{
     private Vector4 scale = new Vector4(1, 1, 1, 1);
     private Float size = 1.0f;
     private Float sizeHalf;
+    private Vector4 uvBounds= new Vector4(0.1f, 0.85f);
     private float[] UVs = 
     {
-        0, 0, 1, 0, 1, 1, 0, 1,  //1
-        0, 0, 1, 0, 1, 1, 0, 1,  //2
-        0, 0, 1, 0, 1, 1, 0, 1,  //3
-        0, 0, 1, 0, 1, 1, 0, 1,  //4
-        0, 0, 1, 0, 1, 1, 0, 1,  //5
-        0, 0, 1, 0, 1, 1, 0, 1   //6
+        uvBounds.getX(), uvBounds.getX(), uvBounds.getY(), uvBounds.getX(), uvBounds.getY(), uvBounds.getY(), uvBounds.getX(), uvBounds.getY(),  //2
+        uvBounds.getX(), uvBounds.getX(), uvBounds.getY(), uvBounds.getX(), uvBounds.getY(), uvBounds.getY(), uvBounds.getX(), uvBounds.getY(),  //1
+        uvBounds.getX(), uvBounds.getX(), uvBounds.getY(), uvBounds.getX(), uvBounds.getY(), uvBounds.getY(), uvBounds.getX(), uvBounds.getY(),  //3
+        uvBounds.getX(), uvBounds.getX(), uvBounds.getY(), uvBounds.getX(), uvBounds.getY(), uvBounds.getY(), uvBounds.getX(), uvBounds.getY(),  //4
+        uvBounds.getX(), uvBounds.getX(), uvBounds.getY(), uvBounds.getX(), uvBounds.getY(), uvBounds.getY(), uvBounds.getX(), uvBounds.getY(),  //5
+        uvBounds.getX(), uvBounds.getX(), uvBounds.getY(), uvBounds.getX(), uvBounds.getY(), uvBounds.getY(), uvBounds.getX(), uvBounds.getY()   //6
     };
     private int[] indices = 
     {
@@ -57,48 +60,59 @@ public class Cube implements GameObject{
         create();
     }
     
+    public void update() {
+        if (InputHandler.isKeyDown(GLFW_KEY_R)) {
+            //System.out.println("Rotating Cube");
+            rotation = Vector4.add(rotation, new Vector4(0, 1f, 0));
+        }
+        if (InputHandler.isKeyDown(GLFW_KEY_Q)){
+            //System.out.println("Rotating Cube");
+            rotation = Vector4.add(rotation, new Vector4(0, -1f, 0));
+        } 
+    }
     
     public void create() {
         init();        
     }
 
     public void init() {
-        this.sizeHalf = size / 2;
+        this.sizeHalf = size / 2.0f;
         this.verts = new Vertex[] {
         //front face
-        new Vertex(-sizeHalf, sizeHalf, -1f, 1.0f),    //0
-        new Vertex(sizeHalf, sizeHalf, -1f, 1.0f),   //1
-        new Vertex(sizeHalf, -sizeHalf, -1f, 1.0f),    //2
-        new Vertex(-sizeHalf, -sizeHalf, -1f, 1.0f),     //3
+        new Vertex(-sizeHalf, sizeHalf, sizeHalf, 1.0f),    //0
+        new Vertex(sizeHalf, sizeHalf, sizeHalf, 1.0f),   //1
+        new Vertex(sizeHalf, -sizeHalf, sizeHalf, 1.0f),    //2
+        new Vertex(-sizeHalf, -sizeHalf, sizeHalf, 1.0f),     //3
 
         //right face - 1/4 , 5, 6, 2/7
-        new Vertex(sizeHalf, sizeHalf, -1f, 1.0f),   //4
-        new Vertex(sizeHalf, sizeHalf, -2f, 1.0f),   //5
-        new Vertex(sizeHalf, -sizeHalf, -2f, 1.0f),    //6
-        new Vertex(sizeHalf, -sizeHalf, -1f, 1.0f),    //7
+        new Vertex(sizeHalf, sizeHalf, sizeHalf, 1.0f),   //4
+        new Vertex(sizeHalf, sizeHalf, -sizeHalf, 1.0f),   //5
+        new Vertex(sizeHalf, -sizeHalf, -sizeHalf, 1.0f),    //6
+        new Vertex(sizeHalf, -sizeHalf, sizeHalf, 1.0f),    //7
         //back face - 5/8, 9 , 10, 6/11
-        new Vertex(sizeHalf, sizeHalf, -2f, 1.0f),   //8
-        new Vertex(-sizeHalf, sizeHalf, -2f, 1.0f),    //9
-        new Vertex(-sizeHalf, -sizeHalf, -2f, 1.0f),     //10
-        new Vertex(sizeHalf, -sizeHalf, -2f, 1.0f),    //11
+        new Vertex(sizeHalf, sizeHalf, -sizeHalf, 1.0f),   //8
+        new Vertex(-sizeHalf, sizeHalf, -sizeHalf, 1.0f),    //9
+        new Vertex(-sizeHalf, -sizeHalf, -sizeHalf, 1.0f),     //10
+        new Vertex(sizeHalf, -sizeHalf, -sizeHalf, 1.0f),    //11
         //left face - 9/12, 13, 14, 10/15
-        new Vertex(-sizeHalf, sizeHalf, -2f, 1.0f),    //12
-        new Vertex(-sizeHalf, sizeHalf, -1f, 1.0f),    //13
-        new Vertex(-sizeHalf, -sizeHalf, -1f, 1.0f),     //14
-        new Vertex(-sizeHalf, -sizeHalf, -2f, 1.0f),     //15
+        new Vertex(-sizeHalf, sizeHalf, -sizeHalf, 1.0f),    //12
+        new Vertex(-sizeHalf, sizeHalf, sizeHalf, 1.0f),    //13
+        new Vertex(-sizeHalf, -sizeHalf, sizeHalf, 1.0f),     //14
+        new Vertex(-sizeHalf, -sizeHalf, -sizeHalf, 1.0f),     //15
         //top face - 8/16, 0, 3, 9/17
-        new Vertex(-sizeHalf, sizeHalf, -1f, 1.0f),     //16
-        new Vertex(-sizeHalf, sizeHalf, -2f, 1.0f),     //17
-        new Vertex(sizeHalf, sizeHalf, -2f, 1.0f),    //18
-        new Vertex(sizeHalf, sizeHalf, -1f, 1.0f),   //19
+        new Vertex(-sizeHalf, sizeHalf, sizeHalf, 1.0f),     //16
+        new Vertex(-sizeHalf, sizeHalf, -sizeHalf, 1.0f),     //17
+        new Vertex(sizeHalf, sizeHalf, -sizeHalf, 1.0f),    //18
+        new Vertex(sizeHalf, sizeHalf, sizeHalf, 1.0f),   //19
         //bottom face - 11/20, 7, 6, 15/21
-        new Vertex(sizeHalf, -sizeHalf, -2f, 1.0f),    //20
-        new Vertex(-sizeHalf, -sizeHalf, -2f, 1.0f),     //21
-        new Vertex(-sizeHalf, -sizeHalf, -1f, 1.0f),     //22
-        new Vertex(sizeHalf, -sizeHalf, -1f, 1.0f),    //23
+        new Vertex(sizeHalf, -sizeHalf, -sizeHalf, 1.0f),    //20
+        new Vertex(-sizeHalf, -sizeHalf, -sizeHalf, 1.0f),     //21
+        new Vertex(-sizeHalf, -sizeHalf, sizeHalf, 1.0f),     //22
+        new Vertex(sizeHalf, -sizeHalf, sizeHalf, 1.0f),    //23
         };
         //translate(position.getX(), position.getY(), position.getZ());
         //System.out.println("Vertexes created");
+        //this.position = new Vector4(0f, 0f , -1f);
         this.mesh = new Mesh(verts, indices, UVs);
         mesh.initMesh();
     }
