@@ -25,6 +25,8 @@ public class Main implements Runnable {
     public boolean switchingScreenMode = false;
     public Shader shader;
     public Cube cube;
+    public Cube cube2;
+    public Cube cube3;
     public WorldFloor worldFloor;
 
     public Camera camera = new Camera(new Vector4(0f, 0f, 2f, 1f), new Vector4(0f, 0f, 0f, 1f));
@@ -71,8 +73,10 @@ public class Main implements Runnable {
             shader.create();
             //System.out.println("Window created");
             //create cube
-            cube = new Cube(1f, new Vector4(0.0f, 0f, -2f), new Vector4(0f, 0f, 0f, 1f), new Vector4(1f, 1f, 1f, 1f));
-            worldFloor = new WorldFloor(20f);
+            cube = new Cube(1f, new Vector4(0.0f, 0.5f, -2f), new Vector4(0f, 0f, 0f, 1f), new Vector4(1f, 1f, 1f, 1f));
+            cube2 = new Cube(3f, new Vector4(4.0f, 2f, -4f), new Vector4(0f, 45f, 0f, 1f), new Vector4(1f, 1f, 1f, 1f));
+            cube3 = new Cube(2f, new Vector4(-2.0f, 1f, -1f), new Vector4(0f, 45f, 0f, 1f), new Vector4(1f, 1f, 1f, 1f));
+            worldFloor = new WorldFloor(20f, new Vector4(0f, 0f, 0f, 1f),  0f);
             //System.out.println("creatinf camera");
             //camera = new Camera(new Vector4(0f, 0f, 0f, 1f), new Vector4(0f, 0f, 0f, 1f));
             //System.out.println("Camera position: " + camera.getPosition().toString());
@@ -122,13 +126,15 @@ public class Main implements Runnable {
         
 
         cube.update();
-        camera.update();
+        camera.update(cube);
     }
     private void render() {
         //System.out.println("Game Rendered");
         //renderer.render();
-        renderer.renderMesh(cube, "beautiful.png", camera);
+        renderer.renderMesh(cube, "brickTexture.png", camera);
         renderer.renderMesh(worldFloor, "grass.png", camera);
+        renderer.renderMesh(cube2, "brickTexture.png", camera);
+        renderer.renderMesh(cube3, "beautiful.png", camera);
         window.swapBuffers();
     }
 

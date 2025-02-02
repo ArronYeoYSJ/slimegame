@@ -165,7 +165,7 @@ private float[][] matrix;
 		
 		result = Matrix4x4.multiply(rotationMatrix, translationMatrix) ;
         // System.out.println("View Matrix");
-        result.logMatrix();
+        //result.logMatrix();
 		return result;
     }
 

@@ -40,7 +40,7 @@ public class Vector4 {
         this.z = z;
         this.w = w;
     }
-    public void setVector(float x, float y, float z) {
+    public void setXYZ(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
