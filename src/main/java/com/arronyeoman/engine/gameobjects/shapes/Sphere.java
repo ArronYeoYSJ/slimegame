@@ -34,7 +34,10 @@ public class Sphere implements GameObject{
         this.rotation = new Vector4(0f, 0f, 0f, 1f);
         this.scale = new Vector4(1f, 1f, 1f, 1f);
         create();
-        
+    }
+
+    public void update() {
+        rotation = new Vector4(rotation.getX(), rotation.getY() + 0.1f, rotation.getZ(), 1f);
     }
 
     public void create(){
@@ -48,7 +51,6 @@ public class Sphere implements GameObject{
         float u = 0f, v = 0f;
         //create vertexes at north pole
         for ( int i = 0; i < slices + 1 ; i++){
-            //if (u != 0f && u != 1f){u += halfStep;}
             u = Math.clamp(1f - i * step - halfStep, 0f, 1f);
             verts[index++] = new VertPN(new Vector4(position.getX(), position.getY() + radius, position.getZ()), new Vector4(0f, 1f, 0f, 0f), new Vector4(u, 0f));
         }
@@ -61,7 +63,6 @@ public class Sphere implements GameObject{
                 //System.out.println("x: " + x);
                 float y = (float) (radius * Math.cos(phi));
                 //System.out.println("y: " + y);
-                // minus sign is to make the sphere draw each layer clockwise with respect to the positive y axis
                 float z = (float) (radius * Math.sin(phi) * Math.sin(theta));
                 //System.out.println("z: " + z);
                 float nx = x / radius;
@@ -70,7 +71,6 @@ public class Sphere implements GameObject{
                 u = (float) (0.5 +  Math.atan2(nz, -nx) / (2 * Math.PI));
                 v = (float) (0.5 + Math.asin(-ny) / Math.PI);
                 //System.out.println("u: " + u + " v: " + v);
-
 
                 verts[index++] =  new VertPN(new Vector4(position.getX() + x, position.getY() + y, position.getZ() + z, 1f), new Vector4(nx, ny, nz, 0f), new Vector4(u, v));
             }
@@ -82,11 +82,9 @@ public class Sphere implements GameObject{
             //System.out.println(" i: " + i + " u: " + u);
         }
 
-        
-        
         //calculate total indices, 1 triangle per slice on caps, 2 triangles per stack,
         // 3 indices per triangle, total doubled to store coordinates to address verts with
-        int indicesLength = slices * 3 * 2 + 2 * 3 * slices * (stacks-1);
+        int indicesLength = slices * 6 + 6 * slices * (stacks-1);
         int layerInterval = slices + 1;
         
         int [] indices = new int[indicesLength];
@@ -97,10 +95,9 @@ public class Sphere implements GameObject{
             indices[index++] = i;
             indices[index++] = (i + layerInterval);
             indices[index++] = (i + layerInterval + 1);
-            System.out.println(" - 0: " + verts[indices[index - 3]].getU() + " , " + verts[indices[index - 3]].getV()  + 
-                                " -  1: " + verts[indices[index - 2]].getU() + " , " + verts[indices[index - 2]].getV() + 
-                                " - 2: " + verts[indices[index - 1]].getU() + " , " + verts[indices[index - 1]].getV());
-        
+            // System.out.println(" - 0: " + verts[indices[index - 3]].getU() + " , " + verts[indices[index - 3]].getV()  + 
+            //                     " -  1: " + verts[indices[index - 2]].getU() + " , " + verts[indices[index - 2]].getV() + 
+            //                     " - 2: " + verts[indices[index - 1]].getU() + " , " + verts[indices[index - 1]].getV());
         }
         //construct middle stacks
         for (int i = 1; i < stacks - 1; i++) {

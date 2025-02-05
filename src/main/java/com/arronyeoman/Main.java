@@ -148,6 +148,7 @@ public class Main implements Runnable {
         
 
         cube.update();
+        sphere.update();
         //dragon.update();
         camera.update();
     }
