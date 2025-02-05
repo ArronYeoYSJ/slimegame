@@ -106,7 +106,7 @@ public class Main implements Runnable {
             // Curves curves = new Curves();
             // curves.test(10);
             
-            sphere = new Sphere(1f,  new Vector4(0f, 2f, 0f), 25, "multiColor.jpg");
+            sphere = new Sphere(1.5f,  new Vector4(0f, 2f, 0f), 32, "mercator.jpg");
         }
 // takes place of main in created threAD
     public void run()  {

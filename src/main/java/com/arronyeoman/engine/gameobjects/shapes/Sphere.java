@@ -56,7 +56,7 @@ public class Sphere implements GameObject{
         }
         //create vertexes at middle stacks
         for (int i = 1; i < stacks; i++) {
-            phi = Math.PI * i / stacks;
+            phi = 3.142 * i / stacks;
             for (int j = 0; j <= slices; j++) {
                 theta = 2 * Math.PI * j / slices;
                 float x = (float) (radius * Math.sin(phi) * Math.cos(theta));
@@ -68,9 +68,9 @@ public class Sphere implements GameObject{
                 float nx = x / radius;
                 float ny = y / radius;
                 float nz = z / radius;
-                u = (float) (0.5 +  Math.atan2(nz, -nx) / (2 * Math.PI));
-                v = (float) (0.5 + Math.asin(-ny) / Math.PI);
-                //System.out.println("u: " + u + " v: " + v);
+                u = (float) (0.5 +  Math.atan2(nz, -nx) / (2 * 3.142));
+                v = (float) (0.5 + Math.asin(-ny) / 3.142);
+                System.out.println("u: " + u + " v: " + v);
 
                 verts[index++] =  new VertPN(new Vector4(position.getX() + x, position.getY() + y, position.getZ() + z, 1f), new Vector4(nx, ny, nz, 0f), new Vector4(u, v));
             }
