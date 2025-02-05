@@ -69,11 +69,11 @@ public class Cube implements GameObject{
     public void update() {
         if (InputHandler.isKeyDown(GLFW_KEY_R)) {
             //System.out.println("Rotating Cube");
-            rotation = Vector4.add(rotation, new Vector4(0, 1f, 0));
+            rotation = Vector4.add(rotation, new Vector4(1, 0f, 0));
         }
         if (InputHandler.isKeyDown(GLFW_KEY_Q)){
             //System.out.println("Rotating Cube");
-            rotation = Vector4.add(rotation, new Vector4(0, -1f, 0));
+            rotation = Vector4.add(rotation, new Vector4(-1, 0f, 0));
         } 
     }
     

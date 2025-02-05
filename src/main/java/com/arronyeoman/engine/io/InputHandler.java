@@ -19,7 +19,7 @@ public class InputHandler {
         keyCallback = new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
-                System.out.println("Key: " + key + " " + action);
+                //System.out.println("Key: " + key + " " + action);
                 if (key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_PRESS) {
                     GLFW.glfwSetWindowShouldClose(window, true);
                 }

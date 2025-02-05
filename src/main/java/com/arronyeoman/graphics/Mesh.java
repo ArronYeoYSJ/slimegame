@@ -35,17 +35,49 @@ public class Mesh {
         this.verticesPN = vertices;
         this.indices = indices;
         this.material = material;
+
+        float prevU, prevV;
+        boolean seamNegationNeeded = false;
+
         float[] uvs = new float[vertices.length * 2];
         Vertex[] verts = new Vertex[vertices.length];
-        normals = new Vector4[vertices.length];
+        Vector4[] norms = new Vector4[vertices.length];
+        prevU = 1f;
+        prevV = 1f;
         for (int i = 0; i < vertices.length; i++) {
-            uvs[i * 2] = vertices[i].getU();
-            uvs[i * 2 + 1] = vertices[i].getV();
+            //System.out.println("Vertex: " + i);
+
+            float u = vertices[i].getU();
+            float v = vertices[i].getV();
+            
+            //sphere has a seam at the end of the texture, this is a hack to fix it
+            // if (u > 0.1f && !seamNegationNeeded){ seamNegationNeeded = true;
+            // System.out.println("Seam negation needed");}
+            // if (prevV == v)
+            // {   
+            //     System.out.println("prev u: " + prevU + " u: " + u);
+            //     if( u < prevU)
+            //     { 
+            //         seamNegationNeeded = false;
+            //         System.out.println("Seam negation not needed");
+            //     }
+            // }
+            // if (seamNegationNeeded && u == 0f){
+            //     //System.out.println("Seam negation applied");
+            //     u = 1f;
+            // }
+
+            uvs[i * 2] = u;
+            uvs[i * 2 + 1] = v;
             verts[i] = vertices[i].getXYZW();
-            normals[i] = vertices[i].getNormal();
+            norms[i] = vertices[i].getNormal();
+            //System.out.println("vertex done : " + i);
+            prevU = vertices[i].getU();
+            prevV = v;
         }
         this.UVs = uvs;
         this.vertices = verts;
+        this.normals = norms;
         usesVertPN = true;
     }
 
@@ -100,11 +132,11 @@ public class Mesh {
         System.out.println("CBO: " + cbo);
     }
 
-    private void updateNormals(Vector4[] verts) {
-        FloatBuffer normalBuffer = MemoryUtil.memAllocFloat(verts.length * 4);
-        float [] normalData = new float[verts.length * 4];
-        for (int i = 0; i < verts.length; i++) {
-            Vector4 normal = verts[i];
+    private void updateNormals(Vector4[] normals) {
+        FloatBuffer normalBuffer = MemoryUtil.memAllocFloat(normals.length * 4);
+        float [] normalData = new float[normals.length * 4];
+        for (int i = 0; i < normals.length; i++) {
+            Vector4 normal = normals[i];
             normalData[i * 4] = normal.getX();
             normalData[i * 4 + 1] = normal.getY();
             normalData[i * 4 + 2] = normal.getZ();
@@ -150,32 +182,12 @@ public class Mesh {
 
     }
 
-    // public void loopOffset(float offsetXFactor, float offsetYFactor) {
-    //     //loop through the vertices and offset them
-    //     try (MemoryStack stack = MemoryStack.stackPush()) {
-    //         FloatBuffer offsetX = stack.callocFloat(1);
-    //         FloatBuffer offsetY = stack.callocFloat(1);
-    //         offsets = computePositionOffsets(offsetX, offsetY);
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-        
-    // }
-
-    // public Vector4 computePositionOffsets(FloatBuffer fXOffset, FloatBuffer fYOffset){
-    //     float fLoopDuration = 5.0f;
-    //     float fScale = 3.14159f * 2.0f / fLoopDuration;
-    //     float fElapsedTime = (float) glfwGetTime();
-    //     float fCurrTimeThroughLoop = fElapsedTime % fLoopDuration;
-    //     fXOffset.put(0, (float) Math.cos(fCurrTimeThroughLoop * fScale) * 0.5f);
-    //     fYOffset.put(0, (float) Math.sin(fCurrTimeThroughLoop * fScale) * 0.5f);
-    //     return new Vector4(fXOffset.get(0), fYOffset.get(0), 0.0f, 0.0f);
-    // }
-
     public void destroy() {
         GL15.glDeleteBuffers(pbo);
         GL15.glDeleteBuffers(ibo);
         GL15.glDeleteBuffers(cbo);
+        GL15.glDeleteBuffers(tbo);
+        GL15.glDeleteBuffers(nbo);
         GL30.glDeleteVertexArrays(vao);
     }
 

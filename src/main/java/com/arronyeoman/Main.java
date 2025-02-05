@@ -2,6 +2,7 @@ package com.arronyeoman;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -31,9 +32,11 @@ public class Main implements Runnable {
     public Cube dragon;
     public WorldFloor worldFloor;
 
+    public Sphere sphere;
+
     public Mesh model;
 
-    public Camera camera = new Camera(new Vector4(0f, 0f, 2f, 1f), new Vector4(0f, 0f, 0f, 1f));
+    public Camera camera = new Camera(new Vector4(0f, 6f, 4f, 1f), new Vector4(-45f, 0f, 0f, 1f));
 
 // Arguments class
     class Arguments {
@@ -80,17 +83,21 @@ public class Main implements Runnable {
 
             //@ArronYeoYSJ @TODO: move model creation
             //create cube
-            // cube = new Cube(1f, new Vector4(0.0f, 0.5f, -2f), new Vector4(0f, 0f, 0f, 1f), new Vector4(1f, 1f, 1f, 1f));
+            cube = new Cube(1f, new Vector4(0.0f, 0.5f, -2f), new Vector4(0f, 0f, 0f, 1f), new Vector4(1f, 1f, 1f, 1f));
             // cube2 = new Cube(3f, new Vector4(4.0f, 2f, -4f), new Vector4(0f, 45f, 0f, 1f), new Vector4(1f, 1f, 1f, 1f));
             // cube3 = new Cube(2f, new Vector4(-2.0f, 1f, -1f), new Vector4(0f, 45f, 0f, 1f), new Vector4(1f, 1f, 1f, 1f));
-            // worldFloor = new WorldFloor(20f, new Vector4(0f, 0f, 0f, 1f),  0f);
-            model = ModelLoader.loadModel("C:\\Users\\arron\\Desktop\\Development\\slimegame\\src\\resources\\models\\bunny.stl", "grass.png");
-            if (model == null) {
-                System.out.println("Model is null");
-            }
-            dragon = new Cube(model);
-            dragon.setScale(new Vector4(0.2f, 0.2f, 0.2f, 1f));
-            dragon.setRotation(new Vector4(270f, 0f, 270f, 1f));
+            worldFloor = new WorldFloor(20f, new Vector4(0f, 0f, 0f, 1f),  0f);
+
+
+            // model = ModelLoader.loadModel("C:\\Users\\arron\\Desktop\\Development\\slimegame\\src\\resources\\models\\bunny.stl", "grass.png");
+            // if (model == null) {
+            //     System.out.println("Model is null");
+            // }
+            // dragon = new Cube(model);
+            // dragon.setScale(new Vector4(0.2f, 0.2f, 0.2f, 1f));
+            // dragon.setRotation(new Vector4(270f, 0f, 270f, 1f));
+
+
 
             //System.out.println("creatinf camera");
             //camera = new Camera(new Vector4(0f, 0f, 0f, 1f), new Vector4(0f, 0f, 0f, 1f));
@@ -99,7 +106,7 @@ public class Main implements Runnable {
             // Curves curves = new Curves();
             // curves.test(10);
             
-
+            sphere = new Sphere(1f,  new Vector4(0f, 2f, 0f), 25, "multiColor.jpg");
         }
 // takes place of main in created threAD
     public void run()  {
@@ -140,7 +147,8 @@ public class Main implements Runnable {
         }
         
 
-        //cube.update();
+        cube.update();
+        //dragon.update();
         camera.update();
     }
     private void render() {
@@ -148,11 +156,12 @@ public class Main implements Runnable {
         //renderer.render();
 
 
-        // renderer.renderMesh(cube, "brickTexture.png", camera);
-        // renderer.renderMesh(worldFloor, "grass.png", camera);
+        renderer.renderMesh(cube, "brickTexture.png", camera);
+        renderer.renderMesh(worldFloor, "grass.png", camera);
         // renderer.renderMesh(cube2, "brickTexture.png", camera);
         // renderer.renderMesh(cube3, "beautiful.png", camera);
-        renderer.renderMesh(dragon, camera);
+        //renderer.renderMesh(dragon, camera);
+        renderer.renderMesh(sphere, camera);
 
 
 
