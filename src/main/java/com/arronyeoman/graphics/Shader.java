@@ -12,10 +12,12 @@ import org.lwjgl.system.MemoryUtil;
 public class Shader {
     
     private String vertexFile, fragmentFile;
+    private String vPath;
     public int vertexID, fragmentID, programID;
 
     public Shader(String vPath, String fPath) {
         System.out.println("Shader created");
+        this.vPath = vPath;
         vertexFile = ResourceLoader.loadResourceAsString(vPath);
         fragmentFile = ResourceLoader.loadResourceAsString(fPath);
     }
@@ -113,5 +115,8 @@ public class Shader {
         }
     public int getProgramID() {
         return programID;
+    }
+    public String getVPath () {
+        return vPath;
     }
 }

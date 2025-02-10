@@ -36,44 +36,20 @@ public class Mesh {
         this.indices = indices;
         this.material = material;
 
-        float prevU, prevV;
-        boolean seamNegationNeeded = false;
-
         float[] uvs = new float[vertices.length * 2];
         Vertex[] verts = new Vertex[vertices.length];
         Vector4[] norms = new Vector4[vertices.length];
-        prevU = 1f;
-        prevV = 1f;
+
         for (int i = 0; i < vertices.length; i++) {
             //System.out.println("Vertex: " + i);
 
             float u = vertices[i].getU();
             float v = vertices[i].getV();
             
-            //sphere has a seam at the end of the texture, this is a hack to fix it
-            // if (u > 0.1f && !seamNegationNeeded){ seamNegationNeeded = true;
-            // System.out.println("Seam negation needed");}
-            // if (prevV == v)
-            // {   
-            //     System.out.println("prev u: " + prevU + " u: " + u);
-            //     if( u < prevU)
-            //     { 
-            //         seamNegationNeeded = false;
-            //         System.out.println("Seam negation not needed");
-            //     }
-            // }
-            // if (seamNegationNeeded && u == 0f){
-            //     //System.out.println("Seam negation applied");
-            //     u = 1f;
-            // }
-
             uvs[i * 2] = u;
             uvs[i * 2 + 1] = v;
-            verts[i] = vertices[i].getXYZW();
+            verts[i] =new Vertex(vertices[i].getXYZW());
             norms[i] = vertices[i].getNormal();
-            //System.out.println("vertex done : " + i);
-            prevU = vertices[i].getU();
-            prevV = v;
         }
         this.UVs = uvs;
         this.vertices = verts;

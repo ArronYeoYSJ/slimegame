@@ -13,6 +13,16 @@ public class Vertex {
         this.b = 1.0f;
         this.a = 1.0f;
     }
+    public Vertex(Vector4 p){
+        this.x = p.getX();
+        this.y = p.getY();
+        this.z = p.getZ();
+        this.w = p.getW();
+        this.r = 1.0f;
+        this.g = 1.0f;
+        this.b = 1.0f;
+        this.a = 1.0f;
+    }
     public Vertex() {
         this.x = 0;
         this.y = 0;

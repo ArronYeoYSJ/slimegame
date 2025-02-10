@@ -46,13 +46,13 @@ public class Sphere implements GameObject{
         int length = ((slices + 1) * (stacks - 1)) + 2 * (slices + 1);
         float step = 1f / slices;
         float halfStep = step / 2;
-        System.out.println("Length: " + length);
+        System.out.println("Creating sphere with " + length + " vertices");
         VertPN[] verts = new VertPN[length];
         float u = 0f, v = 0f;
         //create vertexes at north pole
         for ( int i = 0; i < slices + 1 ; i++){
             u = Math.clamp(1f - i * step - halfStep, 0f, 1f);
-            verts[index++] = new VertPN(new Vector4(position.getX(), position.getY() + radius, position.getZ()), new Vector4(0f, 1f, 0f, 0f), new Vector4(u, 0f));
+            verts[index++] = new VertPN(new Vector4(0f, radius, 0f), new Vector4(0f, 1f, 0f, 0f), new Vector4(u, 0f));
         }
         //create vertexes at middle stacks
         for (int i = 1; i < stacks; i++) {
@@ -70,15 +70,15 @@ public class Sphere implements GameObject{
                 float nz = z / radius;
                 u = (float) (0.5 +  Math.atan2(nz, -nx) / (2 * 3.142));
                 v = (float) (0.5 + Math.asin(-ny) / 3.142);
-                System.out.println("u: " + u + " v: " + v);
+                //System.out.println("u: " + u + " v: " + v);
 
-                verts[index++] =  new VertPN(new Vector4(position.getX() + x, position.getY() + y, position.getZ() + z, 1f), new Vector4(nx, ny, nz, 0f), new Vector4(u, v));
+                verts[index++] =  new VertPN(new Vector4(x, y, z, 1f), new Vector4(nx, ny, nz, 0f), new Vector4(u, v));
             }
         }
         //create vertexes at south pole
         for ( int i = 0; i < slices + 1; i++){
             u = Math.clamp(1f - i * step - halfStep, 0f, 1f);
-            verts[index++] = new VertPN(new Vector4(position.getX(), position.getY() - radius, position.getZ()), new Vector4(0f, -1f, 0f, 0f), new Vector4(u, 1f));
+            verts[index++] = new VertPN(new Vector4(0f,  -radius, 0f), new Vector4(0f, -1f, 0f, 0f), new Vector4(u, 1f));
             //System.out.println(" i: " + i + " u: " + u);
         }
 

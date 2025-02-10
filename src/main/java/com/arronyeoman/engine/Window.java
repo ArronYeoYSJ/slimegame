@@ -158,6 +158,7 @@ public class Window {
             GLFW.glfwSetWindowSize(window, (int) Math.floor(height * aspectRatio), height);
         }
         GLFW.glfwGetWindowSize(window, currentWidth, currentHeight);
+        resizeViewport();
         //GL11.glViewport(0, 0, currentWidth.get(0), currentHeight.get(0)); 
         prevHeight = currentHeight.get(0);
         prevWidth = currentWidth.get(0);
@@ -194,6 +195,10 @@ public class Window {
             lockMouse();
         }
     }
+
+    private void resizeViewport() {
+        GL11.glViewport(0, 0, width, height);
+    }
     private void lockMouse() {
         GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
         isMouseLocked = true;
@@ -207,12 +212,14 @@ public class Window {
         GLFWVidMode videoMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
         GLFW.glfwSetWindowMonitor(window, GLFW.glfwGetPrimaryMonitor(), 0, 0, videoMode.width(), videoMode.height(), 0);
         fullScreen = true;
+        resizeViewport();
     }
 
     public void setWindowed() {
         GLFWVidMode videoMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
         GLFW.glfwSetWindowMonitor(window, 0, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2, width, height, 0);
         fullScreen = false;
+        resizeViewport();
     }
 
     public boolean getIsFullScreen() {

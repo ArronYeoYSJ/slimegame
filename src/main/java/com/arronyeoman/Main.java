@@ -26,6 +26,7 @@ public class Main implements Runnable {
     public static Renderer renderer;
     public boolean switchingScreenMode = false;
     public Shader shader;
+    public Shader lineShader;
     public Cube cube;
     public Cube cube2;
     public Cube cube3;
@@ -33,6 +34,8 @@ public class Main implements Runnable {
     public WorldFloor worldFloor;
 
     public Sphere sphere;
+    public Sphere sphere2;
+    public Line line;
 
     public Mesh model;
 
@@ -72,12 +75,14 @@ public class Main implements Runnable {
 
             //create shader
             shader = new Shader("src\\resources\\shaders\\exampleVert.vert", "src\\resources\\shaders\\exampleFrag.frag");
+            lineShader = new Shader("src\\resources\\shaders\\lineShaderVert.vert", "src\\resources\\shaders\\lineShaderFrag.frag");
             //create renderer
             renderer = new Renderer(window, shader);
             System.out.println("Renderer created");
             window.setBackGroundColor(0.5f, 0.1f, 0.1f);
             window.create();
             shader.create();
+            lineShader.create();
             //System.out.println("Window created");
 
 
@@ -87,26 +92,19 @@ public class Main implements Runnable {
             // cube2 = new Cube(3f, new Vector4(4.0f, 2f, -4f), new Vector4(0f, 45f, 0f, 1f), new Vector4(1f, 1f, 1f, 1f));
             // cube3 = new Cube(2f, new Vector4(-2.0f, 1f, -1f), new Vector4(0f, 45f, 0f, 1f), new Vector4(1f, 1f, 1f, 1f));
             worldFloor = new WorldFloor(20f, new Vector4(0f, 0f, 0f, 1f),  0f);
-
-
-            // model = ModelLoader.loadModel("C:\\Users\\arron\\Desktop\\Development\\slimegame\\src\\resources\\models\\bunny.stl", "grass.png");
-            // if (model == null) {
-            //     System.out.println("Model is null");
-            // }
-            // dragon = new Cube(model);
-            // dragon.setScale(new Vector4(0.2f, 0.2f, 0.2f, 1f));
-            // dragon.setRotation(new Vector4(270f, 0f, 270f, 1f));
-
-
-
-            //System.out.println("creatinf camera");
-            //camera = new Camera(new Vector4(0f, 0f, 0f, 1f), new Vector4(0f, 0f, 0f, 1f));
-            //System.out.println("Camera position: " + camera.getPosition().toString());
-             //test bezier curve
-            // Curves curves = new Curves();
-            // curves.test(10);
             
-            sphere = new Sphere(1.5f,  new Vector4(0f, 2f, 0f), 32, "mercator.jpg");
+            line = new Line(new Vector4(0.321f, 0.123f, -1.01f),
+            new Vector4[]{
+                new Vector4(0.52f,0.2f,0.20f),
+                new Vector4(-1f,-0.0f,1.0f),
+                new Vector4(-0.2f,-0.0f,-0f),
+                
+            }, "multiColor.jpg");
+            line.initLine();
+            
+            sphere = new Sphere(1.5f,  new Vector4(1f, 2f, 0f), 32, "mercator.jpg");
+            sphere2 = new Sphere(2.5f,  new Vector4(-6f, 2f, 0f), 32, "grass.png");
+
         }
 // takes place of main in created threAD
     public void run()  {
@@ -149,23 +147,23 @@ public class Main implements Runnable {
 
         cube.update();
         sphere.update();
+        sphere2.update();
         //dragon.update();
         camera.update();
     }
     private void render() {
-        //System.out.println("Game Rendered");
-        //renderer.render();
 
-
-        renderer.renderMesh(cube, "brickTexture.png", camera);
-        renderer.renderMesh(worldFloor, "grass.png", camera);
+       // renderer.renderMesh(cube, "brickTexture.png", camera);
+        //renderer.renderMesh(worldFloor, "grass.png", camera);
         // renderer.renderMesh(cube2, "brickTexture.png", camera);
         // renderer.renderMesh(cube3, "beautiful.png", camera);
         //renderer.renderMesh(dragon, camera);
+        renderer.setShader(shader);
         renderer.renderMesh(sphere, camera);
-
-
-
+        renderer.renderMesh(sphere2, camera);
+        //System.out.println("Rendering Line");
+        renderer.setShader(lineShader);
+        renderer.renderLine(line, camera);
         window.swapBuffers();
     }
 

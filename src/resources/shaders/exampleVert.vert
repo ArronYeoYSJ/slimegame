@@ -17,6 +17,6 @@ void main() {
     gl_Position =  projection * view * model * position;
     passColour = colour;
     passST = ST;
-    passNormalMV = normalize(mat4(view * model) * vec4(normal, 0.0)).xyz;
+    passNormalMV = normalize(mat4(model) * vec4(normal, 0.0)).xyz;
     passPositionMV = (view * model * position).xyz;
 }
