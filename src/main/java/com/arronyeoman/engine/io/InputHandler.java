@@ -8,14 +8,26 @@ import org.lwjgl.glfw.GLFWMouseButtonCallback;
 public class InputHandler {
 
     public static boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
+    public static boolean[] prevKeys = new boolean[GLFW.GLFW_KEY_LAST];
     public static boolean[] mouseButtons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
+    public static boolean[] prevMouseButtons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
     public static double mouseX, mouseY;
 
     private GLFWKeyCallback keyCallback;
     private GLFWCursorPosCallback cursorPosCallback;
     private GLFWMouseButtonCallback mouseButtonCallback;
 
+    public static void update(){
+        for (int i = 0; i < mouseButtons.length; i++) {
+            prevMouseButtons[i] = mouseButtons[i];
+        }
+        for (int i = 0; i < keys.length; i++){
+            prevKeys[i] = keys[i];
+        }
+    }
+
     public InputHandler() {
+
         keyCallback = new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
@@ -24,7 +36,7 @@ public class InputHandler {
                     GLFW.glfwSetWindowShouldClose(window, true);
                 }
                 else {
-                    keys[key] = action != GLFW.GLFW_RELEASE;
+                    keys[key] = (action != GLFW.GLFW_RELEASE);
                 }
             }
         };
@@ -42,7 +54,7 @@ public class InputHandler {
             @Override
             public void invoke(long window, int button, int action, int mods) {
                 //System.out.println("Mouse button: " + button + " " + action);
-                mouseButtons[button] = action != GLFW.GLFW_RELEASE;
+                mouseButtons[button] = (action != GLFW.GLFW_RELEASE);
             }
         };
     }
@@ -58,6 +70,11 @@ public class InputHandler {
         }
         return false;
     }
+    public static boolean isMouseButtonJustPressed(int button) {
+        // A button is just pressed if it is down now but was not down in the previous frame.
+        return mouseButtons[button] && !prevMouseButtons[button];
+    }
+
     public static boolean isMouseButtonDown(int button) {
         return mouseButtons[button];
     }

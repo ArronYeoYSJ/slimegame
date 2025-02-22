@@ -1,13 +1,13 @@
 package com.arronyeoman.graphics;
 
-import com.arronyeoman.engine.io.ResourceLoader;
-import com.arronyeoman.maths.*;
-
 import java.nio.FloatBuffer;
+
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.MemoryUtil;
 
-
+import com.arronyeoman.engine.io.ResourceLoader;
+import com.arronyeoman.maths.Matrix4x4;
+import com.arronyeoman.maths.Vector4;
 
 public class Shader {
     
@@ -23,27 +23,22 @@ public class Shader {
     }
 
     public void create() {
-        System.out.println("creating shader11");
+        System.out.println("Creating shader");
         programID = GL20.glCreateProgram();
-        //System.out.println("Shader program created");
         vertexID = GL20.glCreateShader(GL20.GL_VERTEX_SHADER);
-        //System.out.println("Vertex shader created");
         GL20.glShaderSource(vertexID, vertexFile);
         GL20.glCompileShader(vertexID);
-        //System.out.println("Vertex shader compiled");
-        //check whether the vertex shader compiled successfully
+
         if (GL20.glGetShaderi(vertexID, GL20.GL_COMPILE_STATUS) == GL20.GL_FALSE) {
             System.err.println("Vertex shader not compiled");
             System.err.println(GL20.glGetShaderInfoLog(vertexID));
             return;
         }
 
-
         fragmentID = GL20.glCreateShader(GL20.GL_FRAGMENT_SHADER);
         GL20.glShaderSource(fragmentID, fragmentFile);
         GL20.glCompileShader(fragmentID);
 
-        //check whether the fragment shader compiled successfully
         if (GL20.glGetShaderi(fragmentID, GL20.GL_COMPILE_STATUS) == GL20.GL_FALSE) {
             System.err.println("Fragment shader not compiled");
             System.err.println(GL20.glGetShaderInfoLog(fragmentID));
@@ -52,29 +47,26 @@ public class Shader {
 
         GL20.glAttachShader(programID, vertexID);
         GL20.glAttachShader(programID, fragmentID);
-        //link shaders to the program
         GL20.glLinkProgram(programID);
-        //check whether the program linked successfully, report errors id not
+        
         if (GL20.glGetProgrami(programID, GL20.GL_LINK_STATUS) == GL20.GL_FALSE) {
             System.err.println("Program not linked");
             System.err.println(GL20.glGetProgramInfoLog(programID));
             return;
         }
-        // validate the program creation
+
         GL20.glValidateProgram(programID);
         if (GL20.glGetProgrami(programID, GL20.GL_VALIDATE_STATUS) == GL20.GL_FALSE) {
-            System.err.println("SHADER VALIDATION FAILED");
+            System.err.println("Shader validation failed");
             System.err.println(GL20.glGetProgramInfoLog(programID));
             return;
-        }
-        else {
+        } else {
             System.out.println("Shader program created successfully");
         }
     }
 
     public void bind() {
-        GL20.glUseProgram(programID);
-        //System.out.println("Shader bound at programID: " + programID);
+        GL20.glUseProgram(this.programID);
     }
 
     public void unbind() {
@@ -96,27 +88,36 @@ public class Shader {
     public void setUniform(String name, int value) {
         GL20.glUniform1i(getUniformLocation(name), value);
     }
+    
     public void setUniform(String name, float value) {
         GL20.glUniform1f(getUniformLocation(name), value);
     }
+    
     public void setUniform(String name, boolean value) {
-        GL20.glUniform1i(getUniformLocation(name), value  ? 1 :0);
+        GL20.glUniform1i(getUniformLocation(name), value ? 1 : 0);
+    }
+    
+    public void setUniform(String name, float[] value) {
+        GL20.glUniform1fv(getUniformLocation(name), value);
     }
    
     public void setUniform(String name, Vector4 value) {
         GL20.glUniform4f(getUniformLocation(name), value.getX(), value.getY(), value.getZ(), value.getW());
     }
+    
     public void setUniform(String name, Matrix4x4 value) {
         FloatBuffer matrix = MemoryUtil.memAllocFloat(16);
-        // value = value.transpose();
         matrix.put(value.getAll());
         matrix.flip();
         GL20.glUniformMatrix4fv(getUniformLocation(name), true, matrix);
-        }
+        MemoryUtil.memFree(matrix);
+    }
+    
     public int getProgramID() {
         return programID;
     }
-    public String getVPath () {
+    
+    public String getVPath() {
         return vPath;
     }
 }

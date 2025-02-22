@@ -12,10 +12,10 @@ public class Vector4 {
     // overload for null vector
     //@Override
     public Vector4() {
-        this.x = 0;
-        this.y = 0;
-        this.z = 0;
-        this.w = 1;
+        this.x = 0f;
+        this.y = 0f;
+        this.z = 0f;
+        this.w = 1f;
     }
     // overload for 3d vector
     //@Override
@@ -30,8 +30,8 @@ public class Vector4 {
     public Vector4(float x, float y) {
         this.x = x;
         this.y = y;
-        this.z = 0;
-        this.w = 1;
+        this.z = 0f;
+        this.w = 1f;
     }
     
     public void setVector(float x, float y, float z, float w) {
@@ -60,6 +60,10 @@ public class Vector4 {
 
     public static Vector4 multiply(Vector4 a, Vector4 b) {
         return new Vector4(a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w);
+    }
+
+    public static Vector4 multiplyByScalar (Vector4 a, float scalar) {
+        return new Vector4(a.x * scalar, a.y * scalar, a.z * scalar, a.w * scalar);
     }
 
     public static Vector4 divide(Vector4 a, Vector4 b) {

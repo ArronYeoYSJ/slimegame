@@ -1,7 +1,6 @@
 package com.arronyeoman.engine.gameobjects.shapes;
 
 import com.arronyeoman.engine.gameobjects.GameObject;
-import com.arronyeoman.graphics.Mesh;
 import com.arronyeoman.maths.*;
 import com.arronyeoman.graphics.*;
 
@@ -14,6 +13,7 @@ public class Sphere implements GameObject{
     private Vector4  position;
     private int slices, stacks;
     private Vector4 scale, rotation;
+    private Vector4 colour = new Vector4(1f, 1f, 1f, 1f);
 
     public Sphere(float radius, Vector4 position, int stacks, String textureName) {
         this.radius = radius;
@@ -46,7 +46,7 @@ public class Sphere implements GameObject{
         int length = ((slices + 1) * (stacks - 1)) + 2 * (slices + 1);
         float step = 1f / slices;
         float halfStep = step / 2;
-        System.out.println("Creating sphere with " + length + " vertices");
+        //System.out.println("Creating sphere with " + length + " vertices");
         VertPN[] verts = new VertPN[length];
         float u = 0f, v = 0f;
         //create vertexes at north pole
@@ -159,6 +159,18 @@ public class Sphere implements GameObject{
 
     public Vector4 getRotation() {
         return rotation;
+    }
+    public Vector4 getColour() {
+        return this.colour;
+    }
+    public void setColour(Vector4 colour) {
+        this.colour = colour;
+    }
+    public void setAlpha(float alpha) {
+        this.colour.setW(alpha);
+    }
+    public float getAlpha() {
+        return this.colour.getW();
     }
 
 }

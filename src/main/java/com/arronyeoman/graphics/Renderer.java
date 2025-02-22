@@ -10,6 +10,7 @@ import com.arronyeoman.engine.Camera;
 import com.arronyeoman.maths.*;
 import com.arronyeoman.engine.Window;
 import com.arronyeoman.engine.gameobjects.GameObject;
+import com.arronyeoman.engine.gameobjects.testobjects.PointLight;
 
 
 
@@ -26,9 +27,12 @@ public class Renderer {
         this.window = window;
               
     }
-    public void renderMesh(GameObject gameObject, Camera camera) {
+    public void renderMesh(GameObject gameObject, Camera camera, float[] light) {
         //System.out.println("Rendering Mesh");
         //enable vertex array and indices array
+        Vector4 lightPos = new Vector4(light[0], light[1], light[2], 1.0f);
+        Vector4 lightRotation = new Vector4((float)Math.atan(light[1]/light[2]), (float) Math.atan(light[2]/light[0]), (float) Math.atan(light[1]/light[0]));
+
         texture = gameObject.getMesh().getTexture();
         GL30.glBindVertexArray(gameObject.getMesh().getVAO());
         GL30.glEnableVertexAttribArray(0);
@@ -46,6 +50,12 @@ public class Renderer {
         shader.setUniform("projection", window.getProjectionMatrix());
         //window.getProjectionMatrix().logMatrix();
         shader.setUniform("view", Matrix4x4.view(camera.getPosition(), camera.getRotation()));
+        shader.setUniform("lightingData", light);
+        shader.setUniform("minLight", new Vector4(0.2f, 0.2f, 0.2f, 1.0f));
+        shader.setUniform("baseColour", gameObject.getColour());
+        shader.setUniform("lightView", Matrix4x4.view(lightPos, lightRotation));
+        shader.setUniform("lightProjection", Matrix4x4.projection(90.0f, 1.0f, 1f, light[7]));
+
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, gameObject.getMesh().getIndices().length, GL11.GL_UNSIGNED_INT, 0);
         //System.out.println("indices length: " + mesh.getIndices().length);
@@ -74,7 +84,7 @@ public class Renderer {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
 
         shader.bind();
-        Matrix4x4.transform(line.getPosition(), line.getRotation(), line.getScale()).logMatrix();
+        //Matrix4x4.transform(line.getPosition(), line.getRotation(), line.getScale()).logMatrix();
         //System.out.println("vert shader path: " + shader.getVPath());
         shader.setUniform("model", Matrix4x4.transform(line.getPosition(), line.getRotation(), line.getScale()));
         //shader.setUniform("model", Matrix4x4.identity());
@@ -111,6 +121,7 @@ public class Renderer {
         GL30.glEnableVertexAttribArray(0);
         GL30.glEnableVertexAttribArray(1);
         GL30.glEnableVertexAttribArray(2);
+        GL30.glEnableVertexAttribArray(3);
         //@NOTE: use glUniform1i(glGetUniformLocation(program, "textureDataX"), X-1); to assign  specific texture units to uniforms when using multiple textures
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, gameObject.getMesh().getIBO());
         GL15.glActiveTexture(GL15.GL_TEXTURE0);
@@ -140,6 +151,7 @@ public class Renderer {
         GL30.glDisableVertexAttribArray(0);
         GL30.glDisableVertexAttribArray(1);
         GL30.glDisableVertexAttribArray(2);
+        GL30.glDisableVertexAttribArray(3);
         GL30.glBindVertexArray(0);
     }
     public void setShader(Shader shader) {

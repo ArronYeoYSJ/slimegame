@@ -3,9 +3,6 @@ package com.arronyeoman.graphics;
 import java.io.IOException;
 
 import org.lwjgl.opengl.GL20;
-import org.lwjgl.stb.*;
-import com.arronyeoman.graphics.Texture;
-import org.w3c.dom.Text;
 
 public class Material {
 

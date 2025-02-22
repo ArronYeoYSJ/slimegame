@@ -14,6 +14,7 @@ public interface GameObject {
     Vector4 getPosition();
     Vector4 getRotation();
     Vector4 getScale();
+    Vector4 getColour();
 
     void destroy();
 }

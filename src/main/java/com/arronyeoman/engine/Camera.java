@@ -21,6 +21,7 @@ public class Camera {
     public float roll = 0;
     public float maxPitch = 60;
     public float minPitch = 0;
+    private boolean lockCameraRotation = false; 
 
 
     public boolean invertY = false;
@@ -43,12 +44,11 @@ public class Camera {
 		if (InputHandler.isKeyDown(GLFW.GLFW_KEY_W)) position = Vector4.add(position, new Vector4(-x, 0f, -z));
 		if (InputHandler.isKeyDown(GLFW.GLFW_KEY_S)) position = Vector4.add(position, new Vector4(x, 0f, z));
 		if (InputHandler.isKeyDown(GLFW.GLFW_KEY_SPACE)) position = Vector4.add(position, new Vector4(0, moveSpeed, 0));
-		if (InputHandler.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) position = Vector4.add(position, new Vector4(0, -moveSpeed, 0));
+		if (InputHandler.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT) && position.getY() >= 0f) position = Vector4.add(position, new Vector4(0, -moveSpeed, 0));
 		
 		float dx = (float) (newMouseX - oldMouseX);
 		float dy = (float) (newMouseY - oldMouseY);
-        		
-		rotation = Vector4.add(rotation, new Vector4(-dy * mouseSensitivity, -dx * mouseSensitivity, 0));
+        if (!lockCameraRotation){rotation = Vector4.add(rotation, new Vector4(-dy * mouseSensitivity, -dx * mouseSensitivity, 0));}
 		
 		oldMouseX = newMouseX;
 		oldMouseY = newMouseY;
@@ -85,11 +85,11 @@ public class Camera {
         if (InputHandler.isKeyDown(GLFW.GLFW_KEY_S)) {
             pitch -= 10 * mouseSensitivity;
         }
-        if (InputHandler.isKeyDown(GLFW.GLFW_KEY_G) && distanceFromTarget > 1) {
-            distanceFromTarget -= 0.1f;
+        if (InputHandler.isKeyDown(GLFW.GLFW_KEY_Z) && distanceFromTarget > 1) {
+            distanceFromTarget -= .1f;
         }
-        if (InputHandler.isKeyDown(GLFW.GLFW_KEY_H) && distanceFromTarget < 10) {
-            distanceFromTarget += 0.1f;
+        if (InputHandler.isKeyDown(GLFW.GLFW_KEY_X) && distanceFromTarget < 10) {
+            distanceFromTarget += .1f;
         }
         if (InputHandler.isKeyDown(GLFW.GLFW_KEY_PERIOD)) {
             roll += 10 * mouseSensitivity;
@@ -122,5 +122,7 @@ public class Camera {
         return this.rotation;
     }
 
-    
+    public void lockCameraRotation(boolean lock) {
+        this.lockCameraRotation = lock;
+    }    
 }

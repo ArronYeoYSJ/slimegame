@@ -16,7 +16,7 @@ import com.arronyeoman.maths.*;
 
 public class Line{
     private VertPN[] vertices;
-    private Vector4[] vecToNextArray;
+    private Vector4[] vecs;
     private int[] indices;
     //Stupid name to avoid capitalization issues and incorect linting
     // youvees = UVs
@@ -32,9 +32,9 @@ public class Line{
 
 
 
-    public Line(Vector4 start, Vector4[] vecToNextArray, String textureName) {
-        this.vecToNextArray = vecToNextArray;
-        vertices = new VertPN[vecToNextArray.length + 1];
+    public Line(Vector4 origin, Vector4[] vecs, String textureName) {
+        this.vecs = vecs;
+        vertices = new VertPN[vecs.length];
         //@TODO calculat midpoint? 
         try{
             textureData = Texture.loadTexture(textureName);
@@ -44,29 +44,26 @@ public class Line{
         }
         youvees = new float[vertices.length * 2];
         indices = new int[vertices.length];
-        this.position = start;
+        this.position = origin;
         this.scale = new Vector4(1f, 1f, 1f, 1f);
         this.rotation = new Vector4(0f, 0f, 0f, 1f);
 
     }
 
     public void initLine() {
-        createLine(origin, vecToNextArray);
+        createLine(origin, vecs);
     }
 
-    private void createLine(Vector4 origin, Vector4[] vecToNextArray) {
+    private void createLine(Vector4 origin, Vector4[] vecs) {
         vao = GL30.glGenVertexArrays();
         GL30.glBindVertexArray(vao);
+        //System.out.println("Creating line with " + vecs.length + " vertices");
 
-        vertices[0] = new VertPN(new Vector4(0f, 0f, 0f ,1f), new Vector4(0, 0, 0, 0), new Vector4(0f, 0.5f));
-        for (int i = 0; i < vecToNextArray.length; i++) {
-            vertices[i + 1] = new VertPN(
-                new Vector4( vertices[i].getX() + vecToNextArray[i].getX(),
-                            vertices[i].getY() + vecToNextArray[i].getY(),
-                            vertices[i].getZ() + vecToNextArray[i].getZ(),
-                             1f), 
+        for (int i = 0; i < vecs.length; i++) {
+            vertices[i] = new VertPN(
+                new Vector4( vecs[i].getX(), vecs[i].getY(), vecs[i].getZ(), 1f), 
                             new Vector4(0, 0, 0, 1),
-                            new Vector4((float)(i/vecToNextArray.length), 0.5f));
+                            new Vector4((float)(i/vecs.length), 0.5f));
             }
         
         FloatBuffer positionBuffer = MemoryUtil.memAllocFloat(vertices.length * 4);
@@ -76,8 +73,8 @@ public class Line{
             positionData[i * 4 + 1] = vertices[i].getY();
             positionData[i * 4 + 2] = vertices[i].getZ();
             positionData[i * 4 + 3] = vertices[i].getW();
-            System.out.println("Vertex: " + i);
-            System.out.println("X: " + vertices[i].getX() +  " Y: " + vertices[i].getY()+  " Z: " + vertices[i].getZ()+ " W: " + vertices[i].getW());
+            //System.out.println("Vertex: " + i);
+            //System.out.println("X: " + vertices[i].getX() +  " Y: " + vertices[i].getY()+  " Z: " + vertices[i].getZ()+ " W: " + vertices[i].getW());
 
             indices[i] = i;
 

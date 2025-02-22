@@ -5,6 +5,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL30;
 
 import com.arronyeoman.engine.io.InputHandler;
@@ -16,7 +17,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_DONT_CARE;
 import java.nio.IntBuffer;
 
 public class Window {
-    private int width, height;
+    private static int width, height;
     private String title;
     private long window;
     private boolean resized;
@@ -65,6 +66,8 @@ public class Window {
         }
         GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
         GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
+        GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, 4);
+
         //GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
 
         window = GLFW.glfwCreateWindow(width, height, title, 0, 0);
@@ -94,8 +97,11 @@ public class Window {
         //enable rendering with gl.createCapabilities()
         GL.createCapabilities();
         
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
+        //basic anti-alliasing
+        GL11.glEnable(GL13.GL_MULTISAMPLE);
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glCullFace(GL11.GL_BACK);
         GL11.glFrontFace(GL11.GL_CW);
@@ -226,11 +232,11 @@ public class Window {
         return fullScreen;
     }
 
-    public int getWidth() {
+    public static int getWidth() {
         return width;
     }
 
-    public int getHeight() {
+    public static int getHeight() {
         return height;
     }
 
@@ -244,19 +250,6 @@ public class Window {
 
     public boolean isResized() {
         return resized;
-    }
-
-
-    public float getBgRed() {
-        return bgRed;
-    }
-
-    public float getBgGreen() {
-        return bgGreen;
-    }
-
-    public float getBgBlue() {
-        return bgBlue;
     }
 
     public int getFrames() {
